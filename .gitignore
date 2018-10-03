@@ -39,8 +39,8 @@ flow-typed/npm/*
 !flow-typed/npm/module_vx.x.x.js
 
 # Transpiled ES5 Code 
-/lib/
-/dist/
+**/lib/
+**/dist/
 
 .idea
 npm-debug.log.*
