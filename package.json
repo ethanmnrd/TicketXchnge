@@ -12,8 +12,8 @@
     "dev:wds": "cross-env NODE_ENV=development webpack-dev-server  --progress --mode development --config webpack.config.dev.babel.js",
     "prod:analyze": "yarn clean && babel client/src -d lib --ignore .test.js && cross-env NODE_ENV=analyze webpack -p --progress --mode production --config webpack.config.analyze.babel.js",
     "prod:build": "yarn clean  && babel client/src -d lib --ignore .test.js && cross-env NODE_ENV=production webpack -p --progress --mode production --config webpack.config.prod.babel.js --output ./ETES_django/project/frontend/static/dist/main.js",
-    "lint": "eslint ./src webpack.config.dev.babel.js --ext .js,.jsx",
-    "lint-fix": "prettier --single-quote --write \"{,!(dist|flow-typed|lib|main)/**}/*.{js,jsx}\" && yarn lint --fix",
+    "lint": "eslint client webpack.config.dev.babel.js --ext .js,.jsx",
+    "lint-fix": "prettier --single-quote --write \"{,client/**}/*.{js,jsx}\" && yarn lint --fix",
     "reinstall": "rm -rf node_modules/ && yarn install",
     "test": "jest --coverage"
   },

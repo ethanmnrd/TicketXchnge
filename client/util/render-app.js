@@ -1,6 +1,8 @@
 // @flow
 import Helmet from 'react-helmet';
-import { APP_CONTAINER_CLASS, STATIC_PATH, WDS_PORT, isProd } from './config';
+import {
+  APP_CONTAINER_CLASS, STATIC_PATH, WDS_PORT, isProd
+} from './config';
 
 const renderApp = () => {
   const head = Helmet.rewind();
@@ -15,8 +17,8 @@ const renderApp = () => {
   <body>
     <div class="${APP_CONTAINER_CLASS}"></div>
     <script src="${
-      isProd ? STATIC_PATH : `http://localhost:${WDS_PORT}/dist`
-    }/js/bundle.js"></script>
+  isProd ? STATIC_PATH : `http://localhost:${WDS_PORT}/dist`
+}/js/bundle.js"></script>
   </body>
 </html>`;
 };
