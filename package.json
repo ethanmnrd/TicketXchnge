@@ -6,7 +6,7 @@
   "author": "Group 6",
   "license": "Apache",
   "scripts": {
-    "clean" : "rimraf ./ETES_django/project/frontend/static/frontend/dist/",
+    "clean": "rimraf ./ETES_django/project/frontend/static/frontend/dist/",
     "dev": "npm-run-all -p dev:start dev:wds",
     "dev:start": "nodemon -e js,jsx --ignore lib --ignore dist --exec babel-node client/util/server.js",
     "dev:wds": "cross-env NODE_ENV=development webpack-dev-server  --progress --mode development --config webpack.config.dev.babel.js",
@@ -27,7 +27,6 @@
     "babel-preset-env": "^1.5.2",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
     "cross-env": "^5.1.4",
     "eslint": "^5.6.1",
     "eslint-config-airbnb": "^17.1.0",
