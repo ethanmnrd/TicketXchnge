@@ -1,15 +1,12 @@
 // @flow
 import path from 'path';
-import { WDS_PORT } from './ETES_django/project/frontend/src/config';
-import { isProd } from './ETES_django/project/frontend/src/util';
-// import { WDS_PORT } from './src/shared/config';
-// import { isProd } from './src/shared/util';
+import { WDS_PORT, isProd } from './client/util/config';
 
 export default {
   entry: [
     // Starting point of app
     'react-hot-loader/patch',
-    './src/client'
+    './client/src'
   ],
   output: {
     filename: 'js/bundle.js', // name of the bundle to generate

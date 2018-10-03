@@ -8,7 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppContainer } from 'react-hot-loader';
 
 import App from './App';
-import { APP_CONTAINER_SELECTOR } from '../config';
+import { APP_CONTAINER_SELECTOR } from '../util/config';
 
 const rootEl = document.querySelector(APP_CONTAINER_SELECTOR);
 

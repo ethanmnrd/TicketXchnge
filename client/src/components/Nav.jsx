@@ -6,7 +6,7 @@ import {
   HOME_PAGE_ROUTE,
   HELLO_PAGE_ROUTE,
   NOT_FOUND_DEMO_PAGE_ROUTE
-} from '../../routes';
+} from '../../util/routes';
 
 const Nav = () => (
   <nav>
