@@ -4,6 +4,5 @@ dist: xenial
 virtualenv: system_site_packages: true
 python: "3.7"
 env: DJANGO=2.1.2
-before_script: cd ETES_django/project
 install: pip install pipfile
 script: python manage.py test
