@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Helmet from 'react-helmet';
-import Message from '../../components/Message';
+import Message from '../Message';
 
 const title = 'Hello Page';
 
