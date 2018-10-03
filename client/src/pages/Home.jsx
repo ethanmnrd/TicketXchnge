@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Helmet from 'react-helmet';
-import { APP_NAME } from '../../../util/config';
+import Login from '../containers/Login';
+import { APP_NAME } from '../../util/config';
 
 const HomePage = () => (
   <div>
@@ -12,7 +13,7 @@ const HomePage = () => (
         { property: 'og:title', content: APP_NAME }
       ]}
     />
-    <h1>At Home Page</h1>
+    <Login />
   </div>
 );
 
