@@ -2,5 +2,5 @@ language: python
 sudo: required
 dist: xenial
 python: "3.7"
-before_script: cd ETES_django
+before_script: cd ETES_django/project
 script: python manage.py test
