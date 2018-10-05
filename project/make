@@ -1,2 +1,0 @@
-@echo 'Run tests'
-pipenv python manage.py runserver
