@@ -8,6 +8,5 @@ before_install:
   - cd project
 install: 
   - pip install -q Django===2.1.2
-  - make init
   #- pip install pipfile
 script: make test #python manage.py test
