@@ -2,11 +2,10 @@ language: python
 dist: xenial
 python: "3.7"
 services: mysql
-# env: DJANGO_VERSION=2.1.2
+env: DJANGO=2.1.2 DB=mysql
 before_install: 
   - pip install pipenv
   - cd project
 install: 
-  - pip install -q Django===2.1.2
-  #- pip install pipfile
-script: pipenv manage.py runserver
+  - pipenv install -r pipfile
+script: python manage.py runserver
