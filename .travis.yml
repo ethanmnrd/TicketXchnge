@@ -9,4 +9,4 @@ before_install:
 install: 
   - pip install -q Django===2.1.2
   #- pip install pipfile
-script: pipenv python manage.py runserver
+script: pipenv manage.py runserver
