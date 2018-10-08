@@ -9,4 +9,5 @@ install:
   - pipenv run pip install pip==18.0 
   - pipenv install --dev --deploy
   - cd project
-script: python manage.py runserver
+script: 
+  - python manage.py test
