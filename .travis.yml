@@ -1,8 +1,8 @@
 language: python
 dist: xenial
 python: "3.7"
-services: mysql
-env: DJANGO=2.1.2 DB=mysql
+#services: mysql
+env: DJANGO=2.1.2 #DB=mysql
 before_install: 
   - pip install pipenv
 install: 
