@@ -4,6 +4,24 @@
   "description": "Personal boilerplate",
   "main": "index.js",
   "author": "Group 6",
+  "contributors": [
+    {
+      "name": "Ethan Maynard",
+      "url": "https://github.com/ethanmnrd"
+    },
+    {
+      "name": "Alexander Nguyen",
+      "url": "https://github.com/alexandernguyen1"
+    },
+    {
+      "name": "Yuki Ou",
+      "url": "https://github.com/ukitomi"
+    },
+    {
+      "name": "John Tran",
+      "url": "https://github.com/jooohhn"
+    }
+  ],
   "license": "Apache",
   "scripts": {
     "clean": "rimraf ./ETES_django/project/frontend/static/dist/",
