@@ -6,6 +6,8 @@ env: DJANGO=2.1.2 DB=mysql
 before_install: 
   - pip install pipenv
 install: 
-  - pipenv install --dev --deploy --python <3.7> #-r pipfile
+  - pipenv install --dev 
+  - pipenv install --deploy
+  - pipenv install --python 3.7 #-r pipfile
   - cd project
 script: python manage.py runserver
