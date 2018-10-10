@@ -2,6 +2,10 @@ language: python
 dist: xenial
 python: "3.7"
 env: DJANGO=2.1.2 DB=sqlite3
+branches:
+  only:
+  - master
+  - travis-ci-update
 before_install: 
   - pip install pipenv
 install: 
