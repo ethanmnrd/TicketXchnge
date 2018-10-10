@@ -1,0 +1,11 @@
+language: python
+dist: xenial
+python: "3.7"
+env: DJANGO=2.1.2 DB=sqlite3
+before_install: 
+  - pip install pipenv
+install: 
+  - pipenv run pip install pip==18.0
+  - pipenv install --dev --deploy
+  - cd server
+script: python manage.py migrate --run-syncdb
