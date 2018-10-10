@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from etes.models import User, Ticket
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
 
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
