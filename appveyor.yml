@@ -14,12 +14,12 @@ install:
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
   - pip install django==%DJANGOVER%
   - pip install pipenv
-  - pipenv run pip install pip==18.0
+#  - pipenv run pip install pip==18.0
   - pipenv install --dev --deploy
 
 before_build:
   - cd server
-  
+
 test_script:
   - "%PYTHON%/Scripts/pip.exe --version"
   - "%PYTHON%/python.exe manage.py test"
