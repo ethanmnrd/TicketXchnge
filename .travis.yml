@@ -1,9 +1,7 @@
-language: generic #python
+language: python
 dist: xenial
-#python: "3.7"
-env: 
-  - DJANGO=2.1.2 DB=sqlite3
-  - PYTHON_VERSION="3.7"
+python: "3.7"
+env: DJANGO=2.1.2 DB=sqlite3
 os: 
   - linux
   - osx
