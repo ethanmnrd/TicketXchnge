@@ -2,6 +2,10 @@ language: python
 dist: xenial
 python: "3.7"
 env: DJANGO=2.1.2 DB=sqlite3
+os: 
+  - linux
+  - osx
+  - windows
 branches:
   only:
   - master
