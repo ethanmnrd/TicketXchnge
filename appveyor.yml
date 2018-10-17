@@ -17,8 +17,8 @@ install:
 #  - pipenv run pip install pip==18.0
   - pipenv install --dev --deploy
 
-before_build:
-  - cd server
+build_script:
+  - ps: cd server
 
 test_script:
   - "%PYTHON%/Scripts/pip.exe --version"
