@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 
-export default class Login extends Component<Props, State> {
+export default class LoginPage extends Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
