@@ -14,7 +14,7 @@ install:
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
   - pip install -U Django
   - pip install pipenv
-#  - pipenv run pip install pip==18.0
+  - pipenv run pip install pip==18.0
   - pipenv install --dev --deploy
 
 build_script:
