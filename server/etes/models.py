@@ -9,7 +9,7 @@ from django.contrib.auth.hashers import make_password
 
 
 class User(models.Model):
-    uid = models.AutoField(primary_key=True)
+    uid = models.AutoField(primary_key=True, null=False)
     user_name = models.CharField(max_length=50)
     f_name = models.CharField(max_length=300)
     l_name = models.CharField(max_length=300)
@@ -26,9 +26,13 @@ class User(models.Model):
         self.password = make_password(self.password)
         super(User, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return "{} - {} {}".format(self.user_name, self.f_name, self.l_name)
+
 
 class Ticket(models.Model):
-    tid = models.AutoField(primary_key=True)
+    tid = models.AutoField(primary_key=True, null=False)
+    ticket_event = models.CharField(max_length=200)
     ticket_price = models.FloatField(max_length=25)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -39,6 +43,9 @@ class Ticket(models.Model):
     )
     tic_type = models.CharField(
         max_length=3, choices=TICKET_TYPE_CHOICES, default='GA')
+
+    def __str__(self):
+        return "{} ({}) - ${}".format(self.ticket_event, self.tic_type, self.ticket_price)
 
 
 class Event(models.Model):
@@ -53,3 +60,6 @@ class Event(models.Model):
     tickets_avail = models.PositiveSmallIntegerField()
     
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{} @ {} in {} on {}".format(self.event_name, self.event_venue, self.event_city, self.event_date)
