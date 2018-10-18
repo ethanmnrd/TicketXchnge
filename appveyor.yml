@@ -12,7 +12,7 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - python --version
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
-  - pip install django==%DJANGOVER%
+  - pip install -U Django
   - pip install pipenv
 #  - pipenv run pip install pip==18.0
   - pipenv install --dev --deploy
