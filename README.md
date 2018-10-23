@@ -25,6 +25,17 @@ pipenv shell # Run this within project root
 yarn dev # Then go to localhost:8000 to see results
 ```
 
+## Back-end Testing
+```
+pipenv shell # run this within project root
+cd server
+python manage.py runserver # Then go to localhost:8000 to see results
+
+Default API POST/GET pages for constructed models:
+localhost:8000/api/etes/user
+localhost:8000/api/etes/ticket
+```
+
 ## Creating Production Build
 ```
 pipenv shell # Run this within project root
