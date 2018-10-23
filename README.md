@@ -29,11 +29,15 @@ yarn dev # Then go to localhost:8000 to see results
 ```
 pipenv shell # run this within project root
 cd server
-python manage.py runserver # Then go to localhost:8000 to see results
+python manage.py runserver # Then go to localhost:8000 to see results (currently blank page)
+
+admin Landing page:
+localhost:8000/admin
 
 Default API POST/GET pages for constructed models:
-localhost:8000/api/etes/user
-localhost:8000/api/etes/ticket
+User List Create page: localhost:8000/api/v1/users
+Ticket List Create page: localhost:8000/api/v1/tickets
+Event List Create page: localhost:8000/api/v1/events
 ```
 
 ## Creating Production Build
