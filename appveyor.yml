@@ -15,7 +15,8 @@ install:
   - pip install -U Django
   - pip install pipenv
   - python -m pip install pip==18.0
-  - pipenv install --dev --deploy --skiplock
+  - pipenv install --dev --deploy 
+  - pipenv install --skiplock
 
 build_script:
   - ps: cd server
