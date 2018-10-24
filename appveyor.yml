@@ -11,8 +11,9 @@ environment:
 install:
   - pip install pipenv
   - pip install Django==1.11.3
-  - pipenv lock
+  #- pipenv lock
   - pipenv install --dev --deploy 
+  - pipenv install --skip-lock
 
 build_script:
   - ps: cd server
