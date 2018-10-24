@@ -2,6 +2,16 @@
 
 import React from 'react';
 import Helmet from 'react-helmet';
+import {
+  Button,
+  Col,
+  Container,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  Row
+} from 'reactstrap';
+import SideMenu from '../containers/SideMenu';
 import { APP_NAME } from '../../util/config';
 
 const HomePage = () => (
@@ -12,7 +22,19 @@ const HomePage = () => (
         { property: 'og:title', content: APP_NAME }
       ]}
     />
-    HomePage
+    {/* <SideMenu /> */}
+    <Container fluid>
+      <Row>
+        <Col sm={{ size: 6, offset: 3 }}>
+          <InputGroup style={{ marginTop: '30px' }}>
+            <Input placeholder="What events are happening..." />
+            <InputGroupAddon addonType="append">
+              <Button>Go</Button>
+            </InputGroupAddon>
+          </InputGroup>
+        </Col>
+      </Row>
+    </Container>
   </div>
 );
 
