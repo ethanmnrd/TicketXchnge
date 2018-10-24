@@ -5,7 +5,7 @@ env: DJANGO=2.1.2 DB=sqlite3
 branches:
   only:
   - master
-  - travis-ci-update
+  - ci-setup
 before_install: 
   - pip install pipenv
 install: 
