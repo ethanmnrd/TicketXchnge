@@ -16,11 +16,9 @@ install:
   - pip install pipenv
   - pipenv run pip install pip==18.0
   - pipenv install --dev --deploy 
-  - pipenv install --skiplock
 
 build_script:
   - ps: cd server
 
 test_script:
-  - "%PYTHON%/Scripts/pip.exe --version"
-  - python manage.py migrate --run-syncdb
+  - python manage.py migrate
