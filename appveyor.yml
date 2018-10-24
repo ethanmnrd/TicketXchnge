@@ -18,4 +18,4 @@ build_script:
   - ps: cd server
 
 test_script:
-  - python manage.py runserver
+  - python3 manage.py runserver
