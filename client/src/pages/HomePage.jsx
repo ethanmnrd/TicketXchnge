@@ -11,7 +11,7 @@ import {
   InputGroupAddon,
   Row
 } from 'reactstrap';
-import SideMenu from '../containers/SideMenu';
+// import SideMenu from '../containers/SideMenu';
 import { APP_NAME } from '../../util/config';
 
 const HomePage = () => (
@@ -26,7 +26,7 @@ const HomePage = () => (
     <Container fluid>
       <Row>
         <Col sm={{ size: 6, offset: 3 }}>
-          <InputGroup style={{ marginTop: '30px' }}>
+          <InputGroup>
             <Input placeholder="What events are happening..." />
             <InputGroupAddon addonType="append">
               <Button>Go</Button>

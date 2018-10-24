@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Container,
   Collapse,
   Navbar,
   NavbarToggler,
@@ -30,7 +29,7 @@ export default class NavMenu extends React.Component {
   render() {
     const { isOpen } = this.state;
     return (
-      <Navbar color="dark" dark expand>
+      <Navbar color="dark" dark expand style={{ marginBottom: '30px' }}>
         <NavbarToggler right="true" onClick={this.toggle} />
         <NavbarBrand tag={Link} to={HOME_PAGE_ROUTE}>
           {APP_NAME}
