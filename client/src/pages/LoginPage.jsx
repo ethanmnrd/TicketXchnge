@@ -48,6 +48,12 @@ export default class LoginPage extends Component<Props, State> {
           >
             Sign In
           </button>
+          <button
+            className="btn btn-success"
+            style={{ marginTop: '20px', marginLeft: '15px' }}
+          >
+            Create Account
+          </button>
         </form>
       </div>
     );
