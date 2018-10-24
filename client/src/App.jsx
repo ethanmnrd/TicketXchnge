@@ -4,7 +4,7 @@ import React from 'react';
 import { Switch } from 'react-router';
 import { Route } from 'react-router-dom';
 import Helmet from 'react-helmet';
-import HomePage from './pages/Home';
+import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFound';
 import NavMenu from './containers/NavMenu';
 import LoginPage from './pages/LoginPage';
