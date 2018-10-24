@@ -5,12 +5,12 @@ platform:
 environment:
   matrix:
     - PYTHON: "C:\\Python37"
-      DJANGOVER: 2.1.2
+      DJANGOVER: 1.11.3
       PYTHON_ARCH: "32"
 
 install:
   - pip install pipenv
-  - pip install Django==2.1.2
+  # - pip install Django==2.1.2
   - pipenv lock
   - pipenv install --dev --deploy 
 
