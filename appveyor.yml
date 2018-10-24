@@ -10,7 +10,7 @@ environment:
 
 install:
   - pip install pipenv
-  # - pip install Django==2.1.2
+  - pip install Django==1.11.3
   - pipenv lock
   - pipenv install --dev --deploy 
 
