@@ -37,48 +37,6 @@ admin Landing page:
 localhost:8000/admin
 ```
 
-### Default API POST/GET pages for constructed models:
-
-User List Create page: 
-
-```
-localhost:8000/api/v1/users
-```
-
-| Field | Type | Description |
-| :-------- | :--------: | --------------- |
-| user_name | charField  | user identifier |
-| email     | emailField | user email associated to account |
-| f_name    | charField  | user's first name |
-| l_name    | charField  | users' last name |
-| password  | charField  | user created password |
-
-Ticket List Create page: 
-
-```
-localhost:8000/api/v1/tickets
-```
-
-| Field | Type | Description |
-| :----------- | :--------: | --------------- |
-| ticket_event | charField  | ticket's event name |
-| ticket_price | floatField | the price set by the seller for the ticket |
-| ticket_type  | charField (GA, VIP, AS) | type of the ticket; general admission, vip, or assigned seating |
-
-Event List Create page: 
-
-```
-localhost:8000/api/v1/events
-```
-
-| Field | Type | Description |
-| :------------ | :--------: | --------------- |
-| event_name    | charField  | name of event |
-| event_venue   | charField | name of event venue |
-| event_city    | charField | city event takes place |
-| event_date    | DateTimeField | date of event |
-| tickets_avail | PositiveSmallIntegerField | number of posted tickets left |
-
 ## Creating Production Build
 ```
 pipenv shell # Run this within project root
