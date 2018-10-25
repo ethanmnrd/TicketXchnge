@@ -43,7 +43,7 @@ localhost:8000/admin
 ```
 
 ## Set Up Database and Connect to Database
-For windows: 
+### For windows: 
 1. Run command prompt as an administrator.
 2. Go MySql server 8.0 installation directory (for example: C:\Program Files (x86)\MySQL\MySQL Server 8.0\bin) copy that location. (8.0 is the MySql server version that you installed, it may varies if you have other version)
 3. In Command prompt run "cd C:\Program Files (x86)\MySQL\MySQL Server 8.0\bin"
@@ -54,7 +54,7 @@ If successful, your command prompt should look like
 mysql>
 ```
 
-For mac:
+### For mac:
 1. Run your terminal
 2. Type the following command to start the MySql server.
 ``` 
@@ -65,6 +65,18 @@ sudo launchctl stop com.mysql.mysqld # stop the MySql server
 ```
 mysql -u root -p
 ```
+4. Type password when prompt
+If successful, your command prompt should look like
+```
+mysql>
+```
+
+### Create database
+Afterall, when you are inside of mysql, do
+```
+CREATE DATABASE ticketx;
+```
+This will create a database called ticketx that will store data needed.
 
 ## Creating Production Build
 ```
