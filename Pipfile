@@ -8,6 +8,7 @@ django = "*"
 djangorestframework = "*"
 django-location-field = "==2.0.3"
 pip = "*"
+pymysql = "*"
 
 [dev-packages]
 coverage = "*"
