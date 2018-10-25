@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'etes',
+    'location_field.apps.DefaultConfig',
     'rest_framework',
+    'etes',
     'frontend', 
 ]
 
