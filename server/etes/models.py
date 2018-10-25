@@ -41,11 +41,11 @@ class Ticket(models.Model):
         ('VIP', 'VIP Seating'),
         ('AS', 'Assigned Seating')
     )
-    tic_type = models.CharField(
+    ticket_type = models.CharField(
         max_length=3, choices=TICKET_TYPE_CHOICES, default='GA')
 
     def __str__(self):
-        return "{} ({}) - ${}".format(self.ticket_event, self.tic_type, self.ticket_price)
+        return "{} ({}) - ${}".format(self.ticket_event, self.ticket_type, self.ticket_price)
 
 
 class Event(models.Model):
