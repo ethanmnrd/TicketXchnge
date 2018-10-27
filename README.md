@@ -33,6 +33,7 @@ yarn dev # Then go to localhost:8000 to see results
 ## Back-end Testing
 ```
 pipenv shell # run this within project root
+pipenv install # to verify required modules are installed
 cd server
 python manage.py runserver # Then go to localhost:8000 to see results (currently blank page)
 ```
