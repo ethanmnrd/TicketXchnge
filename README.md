@@ -56,7 +56,7 @@ CREATE DATABASE ticketx;
 USE ticketx;
 ```
 
-To initialize database tables:
+To initialize database tables, in a new cmd:
 ```
 pipenv shell # run this within project root
 pipenv install # to verify modules are installed
