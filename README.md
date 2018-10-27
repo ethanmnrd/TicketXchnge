@@ -17,11 +17,6 @@ git clone git@github.com:ethanmnrd/TicketXchnge.git
 cd TicketXchnge/
 pipenv install # Installs Python dependencies
 yarn install # Installs JavaScript dependencies
-pipenv install pymysql # Install database connector
-pipenv install django_location_field 
-cd server/
-python3 manage.py makemigrations # transforms model changes into python code to make them deployable to database
-python3 manage.py migrate
 ```
 
 ## Front-end Testing
@@ -43,16 +38,36 @@ admin Landing page:
 localhost:8000/admin
 ```
 
-## Set Up Database and Connect to Database
-### For windows: 
-1. Run command prompt as an administrator.
-2. Go MySql server 8.0 installation directory (for example: C:\Program Files (x86)\MySQL\MySQL Server 8.0\bin) copy that location. (8.0 is the MySql server version that you installed, it may varies if you have other version)
-3. In Command prompt run "cd C:\Program Files (x86)\MySQL\MySQL Server 8.0\bin"
-4. run "mysql -u root"
-5. Type password when prompt
-If successful, your command prompt should look like
+## Start Server and Initialize Database
+### For Windows: 
+Run cmd.exe as administrator.
+```
+cd C:\Program Files (x86)\MySQL\MySQL Server 8.0\bin 
+mysql -u root -p
+password
+```
+If successful, your command prompt should look like:
 ```
 mysql>
+```
+Enter the following:
+```
+CREATE DATABASE ticketx;
+USE ticketx;
+```
+
+To initialize database tables:
+```
+pipenv shell # run this within project root
+pipenv install # to verify modules are installed
+cd server
+python manage.py makemigrations # preps models to be added to database as tables
+python manage.py migrate # initializes tables
+```
+
+To verify tables were created, in mysql cmd:
+```
+SHOW TABLES;
 ```
 
 ### For mac:
