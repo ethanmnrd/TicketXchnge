@@ -10,13 +10,12 @@ branches:
   - database-ci
 before_install: 
   - pip install pipenv
-  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('new_password') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
-  - sudo service mysql restart
-  - sudo mysql_upgrade -u root -pnew_password
+  - mysql "USE mysql;\nUPDATE user SET password=PASSWORD('password') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
   - mysql -e 'CREATE DATABASE IF NOT EXISTS ticketx;'
-  - mysql -e 'USE DATABASE ticketx;'
+  - mysql -e 'USE ticketx;'
 install: 
   - pipenv run pip install pip==18.0
   - pipenv install --dev --deploy
   - cd server
-script: python manage.py migrate --run-syncdb
+script: 
+  - python manage.py syncdb --noinput
