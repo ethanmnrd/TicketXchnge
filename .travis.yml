@@ -2,7 +2,7 @@ language: python
 dist: xenial
 python: "3.7"
 services: mysql
-env: DJANGO=2.1.2 DB=sqlite3
+env: DJANGO=2.1.2 DB=mysql
 branches:
   only:
   - master
