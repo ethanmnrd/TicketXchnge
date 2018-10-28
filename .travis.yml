@@ -1,21 +1,26 @@
 language: python
 dist: xenial
+sudo: required
 python: "3.7"
 services: mysql
-env: DJANGO=2.1.2 DB=mysql
+test:
+  adapter: mysql
+  database: ticketx
+  username: root
+  encoding: utf8
+env: 
+  - DJANGO=2.1.2 DB=mysql
 branches:
   only:
   - master
   - travis-ci-update
   - database-ci
-before_install: 
-  - pip install pipenv
-  - mysql "USE mysql;\nUPDATE user SET password=PASSWORD('password') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS ticketx;'
-  - mysql -e 'USE ticketx;'
+cache:
+  yarn: true
 install: 
+  - pip install pipenv
   - pipenv run pip install pip==18.0
   - pipenv install --dev --deploy
   - cd server
 script: 
-  - python manage.py syncdb --noinput
+  - python manage.py test
