@@ -69,13 +69,14 @@ export default class CheckoutPage extends React.Component {
                 <Col md={6}>
                   <FormGroup>
                     <Label for="firstName">First Name</Label>
-                    <Input type="text" name="firstName" id="firstName" />
+                    <Input type="text" name="firstName" />
                   </FormGroup>
                 </Col>
                 <Col md={6}>
                   <FormGroup>
                     <Label for="password">Last Name</Label>
-                    <Input type="password" name="password" id="password" />
+                    <Input type="password" name="password" />
+>
                   </FormGroup>
                 </Col>
               </Row>
@@ -86,7 +87,7 @@ export default class CheckoutPage extends React.Component {
                     <Input
                       type="text"
                       name="address"
-                      id="address"
+                    />
                       placeholder="1234 Main St"
                     />
                   </FormGroup>
@@ -94,7 +95,7 @@ export default class CheckoutPage extends React.Component {
                 <Col md={4}>
                   <FormGroup>
                     <Label for="phoneNumber">Phone Number</Label>
-                    <Input type="text" name="phoneNumber" id="phoneNumber" />
+                    <Input type="text" name="phoneNumber" />
                   </FormGroup>
                 </Col>
               </Row>
@@ -102,19 +103,19 @@ export default class CheckoutPage extends React.Component {
                 <Col md={6}>
                   <FormGroup>
                     <Label for="city">City</Label>
-                    <Input type="text" name="city" id="city" />
+                    <Input type="text" name="city" />
                   </FormGroup>
                 </Col>
                 <Col md={2}>
                   <FormGroup>
                     <Label for="state">State</Label>
-                    <Input type="text" name="state" id="state" />
+                    <Input type="text" name="state" />
                   </FormGroup>
                 </Col>
                 <Col md={4}>
                   <FormGroup>
                     <Label for="zip">Zip</Label>
-                    <Input type="text" name="zip" id="zip" />
+                    <Input type="text" name="zip" />
                   </FormGroup>
                 </Col>
               </Row>
