@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'ticketx',
         'USER': 'root',
         'PASSWORD': 'password',
-        'HOST': '', 
+        'HOST': '127.0.0.1', 
         'PORT': '',
     }
 }

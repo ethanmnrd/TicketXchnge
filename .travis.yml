@@ -17,6 +17,8 @@ branches:
   - database-ci
 cache:
   yarn: true
+before_install:
+  - mysql -e 'GRANT ALL PRIVILEGES ON ticketx.* to 'root'@'localhost';'
 install: 
   - pip install pipenv
   - pipenv run pip install pip==18.0
