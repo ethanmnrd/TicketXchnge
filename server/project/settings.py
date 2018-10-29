@@ -93,8 +93,8 @@ if os.getenv('TRAVIS', None):
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ticketx',
-        'USER': 'root',
-        'PASSWORD': 'password',
+        'USER': 'travis',
+        'PASSWORD': '',
         'HOST': 'localhost', 
         'PORT': '',
     }
