@@ -71,28 +71,35 @@ SHOW TABLES;
 ```
 
 ### For mac:
-1. Run your terminal
-2. Type the following command to start the MySql server.
+Run your terminal
+Type the following command to start the MySql server.
 ``` 
 sudo launchctl start com.mysql.mysqld # start the MySql server
 sudo launchctl stop com.mysql.mysqld # stop the MySql server
 ```
-3. Type the following command to connect to the MySql server.
+Type the following command to connect to the MySql server.
 ```
 mysql -u root -p
 ```
-4. Type password when prompt
+Type password when prompt
 If successful, your command prompt should look like
 ```
 mysql>
 ```
-
-### Create database
-Afterall, when you are inside of mysql, do
+Enter the following:
 ```
 CREATE DATABASE ticketx;
+USE ticketx;
 ```
-This will create a database called ticketx that will store data needed.
+
+To initialize database tables, in a new cmd:
+```
+pipenv shell # run this within project root
+pipenv install # to verify modules are installed
+cd server
+python manage.py makemigrations # preps models to be added to database as tables
+python manage.py migrate # initializes tables
+```
 
 ## Creating Production Build
 ```
