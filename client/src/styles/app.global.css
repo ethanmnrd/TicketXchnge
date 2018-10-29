@@ -1,1 +1,11 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
+
+.credit-card-input__field {
+  border: 1px solid #ced4da;
+  padding: 18px;
+}
+
+.credit-card-input__input {
+  border-bottom: 1px solid #b6bfc8 !important;
+  padding:0
+}
