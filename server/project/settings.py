@@ -84,13 +84,28 @@ WSGI_APPLICATION = 'project.wsgi.application'
 #     }
 # }
 
+if os.getenv('TRAVIS', None):
+    SECRET_KEY = "SecretKeyForUseOnTravis"
+    DEBUG = False
+    TEMPLATE_DEBUG = True
+
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ticketx',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': 'localhost', 
+        'PORT': '',
+    }
+}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ticketx',
         'USER': 'root',
         'PASSWORD': 'password',
-        'HOST': '127.0.0.1', 
+        'HOST': 'localhost', 
         'PORT': '',
     }
 }
