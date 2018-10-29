@@ -14,7 +14,11 @@ export default class LoginPage extends Component<Props, State> {
   render() {
     return (
       <div className="container align-middle" style={{ marginTop: '50px' }}>
-        <h1 style={{ textAlign: 'center' }}> TicketX </h1>
+        <h1 style={{ textAlign: 'center' }} className="display-3">
+          {' '}
+          TicketX
+          {' '}
+        </h1>
         <form>
           <div className="form-group">
             <label>Email address</label>

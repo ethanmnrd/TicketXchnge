@@ -24,8 +24,18 @@ export default class CheckoutPage extends React.Component {
         number: '4465400307927329'
       }
     };
-    this.handleCardNumber = this.handleCardNumber.bind(this);
   }
+
+  handleUserInput = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState(prevState => ({
+      creditCard: {
+        ...prevState.creditCard,
+        [name]: value
+      }
+    }));
+  };
 
   handleCardNumber = (e) => {
     const number = e.target.value;
@@ -76,7 +86,6 @@ export default class CheckoutPage extends React.Component {
                   <FormGroup>
                     <Label for="password">Last Name</Label>
                     <Input type="password" name="password" />
->
                   </FormGroup>
                 </Col>
               </Row>
@@ -87,7 +96,6 @@ export default class CheckoutPage extends React.Component {
                     <Input
                       type="text"
                       name="address"
-                    />
                       placeholder="1234 Main St"
                     />
                   </FormGroup>
