@@ -99,15 +99,16 @@ if os.getenv('TRAVIS', None):
         'PORT': '',
     }
 }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ticketx',
-        'USER': 'root',
-        'PASSWORD': 'password',
-        'HOST': 'localhost', 
-        'PORT': '',
-    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'ticketx',
+            'USER': 'root',
+            'PASSWORD': 'password',
+            'HOST': 'localhost', 
+            'PORT': '',
+        }
 }
 
 # Password validation
