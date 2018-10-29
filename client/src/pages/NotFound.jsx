@@ -14,7 +14,9 @@ const NotFoundPage = () => (
         { property: 'og:title', content: title }
       ]}
     />
-    <h1>At Not Found</h1>
+    <div className="container align-middle" style={{ marginTop: '50px' }}>
+      <h1 style={{ textAlign: 'center' }}> Page Not Found </h1>
+    </div>
   </div>
 );
 
