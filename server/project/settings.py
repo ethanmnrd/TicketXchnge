@@ -37,10 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'location_field.apps.DefaultConfig',
+    # 'location_field.apps.DefaultConfig',
     'rest_framework',
     'etes',
-    'frontend', 
+    'frontend',
 ]
 
 MIDDLEWARE = [
@@ -90,15 +90,15 @@ if os.getenv('TRAVIS', None):
     TEMPLATE_DEBUG = True
 
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ticketx',
-        'USER': 'travis',
-        'PASSWORD': '',
-        'HOST': 'localhost', 
-        'PORT': '',
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'ticketx',
+            'USER': 'travis',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
     }
-}
 else:
     DATABASES = {
         'default': {
@@ -106,10 +106,10 @@ else:
             'NAME': 'ticketx',
             'USER': 'root',
             'PASSWORD': 'password',
-            'HOST': 'localhost', 
+            'HOST': 'localhost',
             'PORT': '',
         }
-}
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -129,6 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'etes.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
