@@ -1,19 +1,25 @@
-from django.db import models
+from django import forms
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import PermissionsMixin
+from django.core.mail import send_mail
 # from django.contrib.gis.db import models
 from django.core.validators import RegexValidator
-from django import forms
-from django.contrib.auth.hashers import make_password
+from django.db import models
+
+from .managers import UserManager
+
 # from django.contrib.gis.geos import Point
 # from location_field.models.spatial import LocationField
-# Create your models here.
 
 
-class User(models.Model):
+class User(AbstractBaseUser, PermissionsMixin):
     uid = models.AutoField(primary_key=True, null=False)
+    email = models.EmailField(max_length=200, unique=True)
     user_name = models.CharField(max_length=50)
-    f_name = models.CharField(max_length=300)
-    l_name = models.CharField(max_length=300)
-    email = models.EmailField(max_length=200)
+    f_name = models.CharField(max_length=300, blank=True)
+    l_name = models.CharField(max_length=300, blank=True)
+    is_active = models.BooleanField(default=True)
     # phone_regex = forms.RegexValidator(
     #     regex=r'^)\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     # phone_num = models.CharField(validators=[phone_regex], max_length=17, blank=True)
@@ -21,6 +27,18 @@ class User(models.Model):
     password = forms.CharField(
         max_length=200, min_length=8, widget=forms.PasswordInput)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    def get_full_name(self):
+        full_name = '%s %s' % (self.f_name, self.l_name)
+        return full_name.strip()
+
+    def get_first_name(self):
+        return self.f_name
 
     def save(self, *args, **kwargs):
         self.password = make_password(self.password)
@@ -58,7 +76,7 @@ class Event(models.Model):
     # objects = models.GeoManager()
     event_date = models.DateTimeField()
     tickets_avail = models.PositiveSmallIntegerField()
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
