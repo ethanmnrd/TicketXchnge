@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.db import models
 
-from .managers import UserManager
+from .managers import UserManager, TicketManager, EventManager
 
 # from django.contrib.gis.geos import Point
 # from location_field.models.spatial import LocationField
@@ -62,6 +62,8 @@ class Ticket(models.Model):
     ticket_type = models.CharField(
         max_length=3, choices=TICKET_TYPE_CHOICES, default='GA')
 
+    objects = TicketManager()
+
     def __str__(self):
         return "{} ({}) - ${}".format(self.ticket_event, self.ticket_type, self.ticket_price)
 
@@ -75,9 +77,10 @@ class Event(models.Model):
     #     based_fields=['event_city'], zoom=7, default=Point(1.0, 1.0))
     # objects = models.GeoManager()
     event_date = models.DateTimeField()
-    tickets_avail = models.PositiveSmallIntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    objects = EventManager()
+
     def __str__(self):
-        return "{} @ {} in {} on {}".format(self.event_name, self.event_venue, self.event_city, self.event_date)
+        return "{} @ {}".format(self.event_name, self.event_venue)
