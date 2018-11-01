@@ -24,3 +24,27 @@ class UserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self._create_user(email, password, **extra_fields)
+
+
+class TicketManager(BaseUserManager):
+    use_in_migrations = True
+
+    def create_ticket(self, ticket_event, ticket_type, ticket_price):
+        if not ticket_event:
+            raise ValueError('Must have event ticket is associated to')
+        ticket = self.model(ticket_event=ticket_event,
+                            ticket_type=ticket_type, ticket_price=ticket_price)
+        ticket.save(using=self._db)
+        return ticket
+
+
+class EventManager(BaseUserManager):
+    use_in_migrations = True
+
+    def create_event(self, event_name, event_venue, event_date, **extra_fields):
+        if not event_venue:
+            raise ValueError('Must have event venue')
+        event = self.model(event_name=event_name,
+                           event_venue=event_venue, event_date=event_date)
+        event.save(using=self._db)
+        return event
