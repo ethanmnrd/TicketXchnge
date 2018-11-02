@@ -123,7 +123,7 @@ export default class CheckoutPage extends React.Component {
                 <Col md={4}>
                   <FormGroup>
                     <Label for="zip">Zip</Label>
-                    <Input type="text" name="zip" />
+                    <Input type="number" name="zip" />
                   </FormGroup>
                 </Col>
               </Row>
