@@ -7,8 +7,8 @@ from etes.models import Event, Ticket, User
 class UserTestCase(TestCase):
 
     # Creates a dummy user with fields to be tested against true fields of User # Model
-    def create_testuser(self, email="test@example.com", user_name="test_user", f_name="test", l_name="user"):
-        return User.objects.create_user(email=email, user_name=user_name, f_name=f_name, l_name=l_name)
+    def create_testuser(self, email="test@example.com", user_name="test_user", f_name="test", l_name="user", password="test_password"):
+        return User.objects.create_user(email=email, user_name=user_name, f_name=f_name, l_name=l_name, password=password)
 
     def test_user_creation(self):
         b = self.create_testuser()

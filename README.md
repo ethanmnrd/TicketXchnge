@@ -33,6 +33,13 @@ cd server
 python manage.py runserver # Then go to localhost:8000 to see results (currently blank page)
 ```
 
+### To run unit tests:
+```
+pipenv shell # run this within project root
+cd server
+python manage.py test # Should be 'OK'
+```
+
 ### Back-end Migrations
 ```
 pipenv shell # run this within project root
