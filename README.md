@@ -52,3 +52,6 @@ pipenv shell # Run this within project root
 yarn prod:build # Should create necessary static files in `./server/frontend/static/dist/main.js`
 python ./server/manage.py runserver # Starts Django server. Then go go to localhost:8000 to see results
 ```
+
+## Django REST API Reference
+https://github.com/ethanmnrd/TicketXchnge/wiki/Django-REST-API-Reference
