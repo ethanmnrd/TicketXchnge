@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.db import models
 
-from .managers import UserManager, TicketManager, EventManager
+from .managers import EventManager, TicketManager, UserManager
 
 # from django.contrib.gis.geos import Point
 # from location_field.models.spatial import LocationField
@@ -24,8 +24,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     #     regex=r'^)\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     # phone_num = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     # password = models.CharField(max_length=32, widget = forms.PasswordInput)
-    password = forms.CharField(
-        max_length=200, min_length=8, widget=forms.PasswordInput)
+    password = models.CharField(max_length=200, default="password")
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
