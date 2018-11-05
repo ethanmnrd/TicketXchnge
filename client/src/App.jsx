@@ -15,7 +15,7 @@ import {
   HOME_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
   CHECKOUT_PAGE_ROUTE,
-  SIGN_UP_PAGE
+  SIGNUP_PAGE_ROUTE
 } from '../util/routes';
 import './styles/app.global.css';
 
@@ -27,7 +27,7 @@ const App = () => (
       <Route exact path={HOME_PAGE_ROUTE} render={() => <HomePage />} />
       <Route exact path={LOGIN_PAGE_ROUTE} render={() => <LoginPage />} />
       <Route exact path={CHECKOUT_PAGE_ROUTE} render={() => <CheckoutPage />} />
-      <Route exact path={SIGN_UP_PAGE} render={() => <SignUpPage />} />
+      <Route exact path={SIGNUP_PAGE_ROUTE} render={() => <SignUpPage />} />
       <Route component={NotFoundPage} />
     </Switch>
   </div>

@@ -14,7 +14,7 @@ import {
   HOME_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
   CHECKOUT_PAGE_ROUTE,
-  SIGN_UP_PAGE
+  SIGNUP_PAGE_ROUTE
 } from '../../util/routes';
 // @ TODO: These CSS properties aren't given priority. Find out why
 
@@ -57,7 +57,7 @@ export default class NavMenu extends React.Component {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink exact tag={RRNavLink} to={SIGN_UP_PAGE}>
+              <NavLink exact tag={RRNavLink} to={SIGNUP_PAGE_ROUTE}>
                 Sign Up
               </NavLink>
             </NavItem>
