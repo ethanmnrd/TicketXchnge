@@ -1,7 +1,8 @@
 // @flow
 
 export const HOME_PAGE_ROUTE = '/';
-export const HELLO_PAGE_ROUTE = '/hello';
-export const NOT_FOUND_DEMO_PAGE_ROUTE = '/404';
+export const LOGIN_PAGE_ROUTE = '/login';
+export const CHECKOUT_PAGE_ROUTE = '/checkout';
+export const SIGN_UP_PAGE = '/signup';
 
 export const helloEndpointRoute = (num: ?number) => `/ajax/hello/${num || ':num'}`;

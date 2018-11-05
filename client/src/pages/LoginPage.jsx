@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 
-export default class Login extends Component<Props, State> {
+export default class LoginPage extends Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +14,9 @@ export default class Login extends Component<Props, State> {
   render() {
     return (
       <div className="container align-middle" style={{ marginTop: '50px' }}>
-        <h1 style={{ textAlign: 'center' }}> TicketX </h1>
+        <h1 style={{ textAlign: 'center' }} className="display-1">
+          TicketX
+        </h1>
         <form>
           <div className="form-group">
             <label>Email address</label>
@@ -38,16 +40,21 @@ export default class Login extends Component<Props, State> {
             />
           </div>
           <div className="form-check">
-            <input
-              type="checkbox"
-              className="form-check-input"
-            />
-            <label className="form-check-label">
-              Remember Me
-            </label>
+            <input type="checkbox" className="form-check-input" />
+            <label className="form-check-label">Remember Me</label>
           </div>
-          <button type="submit" className="btn btn-primary" style={{ marginTop: '20px' }}>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{ marginTop: '20px' }}
+          >
             Sign In
+          </button>
+          <button
+            className="btn btn-success"
+            style={{ marginTop: '20px', marginLeft: '15px' }}
+          >
+            Create Account
           </button>
         </form>
       </div>

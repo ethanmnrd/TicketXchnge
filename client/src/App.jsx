@@ -4,17 +4,30 @@ import React from 'react';
 import { Switch } from 'react-router';
 import { Route } from 'react-router-dom';
 import Helmet from 'react-helmet';
-import { APP_NAME } from '../util/config';
-import HomePage from './pages/Home';
+import NavMenu from './containers/NavMenu';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import CheckoutPage from './pages/CheckoutPage';
+import SignUpPage from './pages/SignUpPage';
 import NotFoundPage from './pages/NotFound';
-import { HOME_PAGE_ROUTE } from '../util/routes';
+import { APP_NAME } from '../util/config';
+import {
+  HOME_PAGE_ROUTE,
+  LOGIN_PAGE_ROUTE,
+  CHECKOUT_PAGE_ROUTE,
+  SIGN_UP_PAGE
+} from '../util/routes';
 import './styles/app.global.css';
 
 const App = () => (
   <div>
     <Helmet titleTemplate={`%s | ${APP_NAME}`} defaultTitle={APP_NAME} />
+    <NavMenu />
     <Switch>
       <Route exact path={HOME_PAGE_ROUTE} render={() => <HomePage />} />
+      <Route exact path={LOGIN_PAGE_ROUTE} render={() => <LoginPage />} />
+      <Route exact path={CHECKOUT_PAGE_ROUTE} render={() => <CheckoutPage />} />
+      <Route exact path={SIGN_UP_PAGE} render={() => <SignUpPage />} />
       <Route component={NotFoundPage} />
     </Switch>
   </div>
