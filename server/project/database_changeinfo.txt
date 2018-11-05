@@ -1,0 +1,22 @@
+Followed this tutorial: https://justinmi.me/blog/2017/04/28/migrating-sql-databases
+Make sure to have this install: pip install MySQL-python
+
+After you install mysql, i have trouble launching it. So what I did is:
+/usr/local/mysql/bin/mysql -u root -p
+password is: password
+(Remember to start the mysql server first)
+
+Changing the root / create different users:
+https://www.linode.com/docs/databases/mysql/install-mysql-on-ubuntu-14-04/
+
+Changes in settings.py:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ticketx',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        # 'HOST': 'your_host_address', 
+        # 'PORT': 'your_port',
+    }
+}
