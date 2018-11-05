@@ -1,4 +1,4 @@
-# TicketXchnge
+# TicketXchnge [![Build Status](https://travis-ci.com/ethanmnrd/TicketXchnge.svg?branch=master)](https://travis-ci.com/ethanmnrd/TicketXchnge)
 
 ## Required Tools
 - Python@3.7.0
