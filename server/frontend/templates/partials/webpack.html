@@ -1,0 +1,2 @@
+{% load static %}
+<script src="{% if use_dev_server %}http://localhost:7000/dist/js/{% else %}{% static 'dist/js/' %}{% endif %}{{ bundle }}"></script>

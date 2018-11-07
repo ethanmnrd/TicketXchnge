@@ -8,6 +8,6 @@
 <body>
   <div class="js-app"></div>
 </body>
-{% load static %} 
-<script src="{% static "dist/main.js" %}"></script>
+{% load project_tags %}
+{% webpack 'bundle.js' %}
 </html>
