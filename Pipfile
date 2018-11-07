@@ -12,6 +12,7 @@ pymysql = "*"
 python-dotenv = "*"
 django-webtest = "*"
 coverage = "*"
+requests = "*"
 
 [dev-packages]
 coverage = "*"
