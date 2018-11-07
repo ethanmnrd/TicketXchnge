@@ -17,7 +17,7 @@ import {
 } from 'reactstrap';
 import { USERS_API_ROUTE } from '../../util/routes';
 
-export default class SignUpPage extends Component<Props, State> {
+export default class SignUp extends Component<Props, State> {
   state = {
     email: '',
     firstName: '',
@@ -93,7 +93,7 @@ export default class SignUpPage extends Component<Props, State> {
 
   render() {
     return (
-      <Container className="align-middle">
+      <Container className="align-middle" style={this.props.style}>
         <Form style={{ marginTop: '20px' }}>
           <Row form>
             <Col md={6}>
