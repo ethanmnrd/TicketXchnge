@@ -41,8 +41,8 @@ class TicketTestCase(TestCase):
 
 
 class EventTestCase(TestCase):
-    def create_testevent(self, event_name="testevent", event_venue="testvenue", event_date="2018-01-01"):
-        return Event.objects.create_event(event_name=event_name, event_venue=event_venue, event_date=event_date)
+    def create_testevent(self, event_name="testevent", event_venue="testvenue", event_date=timezone.datetime(2018, 11, 1), start_time=timezone.datetime(2018, 11, 1, 18, 00), end_time=timezone.datetime(2018, 11, 1, 21, 00)):
+        return Event.objects.create_event(event_name=event_name, event_venue=event_venue, event_date=event_date, start_time=start_time, end_time=end_time)
 
     def test_event_creation(self):
         e = self.create_testevent()
