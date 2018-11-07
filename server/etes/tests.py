@@ -19,6 +19,8 @@ class UserTestCase(TestCase):
         # Tests get_full_name() from User model
         self.assertEqual(b.get_full_name(), b.f_name + " " + b.l_name)
 
+        self.assertFalse(b.is_staff())
+
         # Tests get_first_name() from User model
         self.assertEqual(b.get_first_name(), b.f_name)
 
