@@ -1,15 +1,23 @@
 // @flow
 
 import React, { Component } from 'react';
+import { Modal, ModalHeader } from 'reactstrap';
+import SignUp from '../containers/SignUp';
 
 export default class LoginPage extends Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      modalOpen: false
     };
   }
+
+  toggleModal = (e) => {
+    e.preventDefault();
+    this.setState({ modalOpen: !this.state.modalOpen });
+  };
 
   render() {
     return (
@@ -53,9 +61,20 @@ export default class LoginPage extends Component<Props, State> {
           <button
             className="btn btn-success"
             style={{ marginTop: '20px', marginLeft: '15px' }}
+            onClick={this.toggleModal}
           >
             Create Account
           </button>
+          <Modal
+            style={{ paddingBottom: '25px' }}
+            size="lg"
+            isOpen={this.state.modalOpen}
+            toggle={this.toggleModal}
+            className={this.props.className}
+          >
+            <ModalHeader toggle={this.toggleModal}>Sign Up</ModalHeader>
+            <SignUp style={{ paddingBottom: '25px' }} />
+          </Modal>
         </form>
       </div>
     );

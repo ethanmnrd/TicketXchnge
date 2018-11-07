@@ -13,8 +13,7 @@ import { APP_NAME } from '../../util/config';
 import {
   HOME_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
-  CHECKOUT_PAGE_ROUTE,
-  SIGNUP_PAGE_ROUTE
+  CHECKOUT_PAGE_ROUTE
 } from '../../util/routes';
 // @ TODO: These CSS properties aren't given priority. Find out why
 
@@ -54,11 +53,6 @@ export default class NavMenu extends React.Component {
             <NavItem>
               <NavLink exact tag={RRNavLink} to={CHECKOUT_PAGE_ROUTE}>
                 Checkout
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink exact tag={RRNavLink} to={SIGNUP_PAGE_ROUTE}>
-                Sign Up
               </NavLink>
             </NavItem>
           </Nav>
