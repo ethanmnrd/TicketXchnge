@@ -1,7 +1,9 @@
 // @flow
 
 import React, { Component } from 'react';
+import { post } from 'axios';
 import {
+  Alert,
   Button,
   Container,
   Col,
@@ -13,6 +15,7 @@ import {
   Label,
   Row
 } from 'reactstrap';
+import { USERS_API_ROUTE } from '../../util/routes';
 
 export default class SignUpPage extends Component<Props, State> {
   state = {
@@ -22,7 +25,8 @@ export default class SignUpPage extends Component<Props, State> {
     password: '',
     formValid: false,
     emailValid: true,
-    passwordValid: true
+    passwordValid: true,
+    confirmation: ''
   };
 
   handleUserInput = (e) => {
@@ -39,9 +43,52 @@ export default class SignUpPage extends Component<Props, State> {
     ) === null
       ? false
       : true;
-    const passwordValid = password.length >= 6;
+    const passwordValid = password.length >= 8;
     const formValid = emailValid && passwordValid;
     this.setState({ emailValid, passwordValid, formValid });
+  };
+
+  handleSubmitForm = (e) => {
+    e.preventDefault();
+    const {
+      firstName, lastName, email, password
+    } = this.state;
+    post(USERS_API_ROUTE, {
+      firstName,
+      lastName,
+      email,
+      user_name: email,
+      password
+    })
+      .then((res) => {
+        console.dir(res);
+        this.setState({ confirmation: 'SUCCESS' });
+      })
+      .catch((err) => {
+        console.dir(err);
+        this.setState({ confirmation: `ERROR: ${err}` });
+      });
+  };
+
+  renderAlert = () => {
+    const { confirmation } = this.state;
+    if (confirmation === 'SUCCESS') {
+      return (
+        <Alert color="success" style={{ marginTop: '20px' }}>
+          Account creation successful!
+        </Alert>
+      );
+    }
+    if (confirmation.includes('ERROR')) {
+      return (
+        <Alert color="danger" style={{ marginTop: '20px' }}>
+          Something went wrong with account creation:
+          {' '}
+          {confirmation}
+        </Alert>
+      );
+    }
+    return null;
   };
 
   render() {
@@ -99,13 +146,18 @@ export default class SignUpPage extends Component<Props, State> {
                   invalid={!this.state.passwordValid}
                 />
                 <FormFeedback>Please check password requirements!</FormFeedback>
-                <FormText>Please use at least 6 characters</FormText>
+                <FormText>Please use at least 8 characters</FormText>
               </FormGroup>
             </Col>
           </Row>
-          <Button disabled={!this.state.formValid} color="primary">
+          <Button
+            disabled={!this.state.formValid}
+            onClick={this.handleSubmitForm}
+            color="primary"
+          >
             Create Account
           </Button>
+          {this.renderAlert()}
         </Form>
       </Container>
     );
