@@ -21,8 +21,13 @@ yarn install # Installs JavaScript dependencies
 
 ## Front-end Testing
 ```
+# In one terminal
+yarn dev:wds
+
+# In another terminal
 pipenv shell # Run this within project root
-yarn dev # Then go to localhost:8000 to see results
+cd server
+python manage.py runserver --settings=project.settings.dev
 ```
 
 ## Back-end Testing
@@ -30,7 +35,7 @@ yarn dev # Then go to localhost:8000 to see results
 pipenv shell # run this within project root
 pipenv install # to verify required modules are installed
 cd server
-python manage.py runserver # Then go to localhost:8000 to see results (currently blank page)
+python manage.py runserver --settings=project.settings.dev # Then go to localhost:8000 to see results (currently blank page)
 ```
 
 ### To run unit tests:
@@ -56,8 +61,8 @@ localhost:8000/admin
 ## Creating Production Build
 ```
 pipenv shell # Run this within project root
-yarn prod:build # Should create necessary static files in `./server/frontend/static/dist/main.js`
-python ./server/manage.py runserver # Starts Django server. Then go go to localhost:8000 to see results
+yarn prod:build # Should create necessary static files in `./server/frontend/static/dist/js/bundle.js`
+python manage.py runserver --settings=project.settings.prod # Starts Django server. Then go go to localhost:8000 to see results
 ```
 
 ## Django REST API Reference
