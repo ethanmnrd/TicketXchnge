@@ -13,6 +13,7 @@ python-dotenv = "*"
 django-webtest = "*"
 coverage = "*"
 requests = "*"
+whitenoise = "*"
 
 [dev-packages]
 coverage = "*"

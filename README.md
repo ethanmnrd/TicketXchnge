@@ -42,15 +42,15 @@ python manage.py runserver --settings=project.settings.dev # Then go to localhos
 ```
 pipenv shell # run this within project root
 cd server
-python manage.py test # Should be 'OK'
+python manage.py test --settings=project.settings.prod # Should be 'OK'
 ```
 
 ### Back-end Migrations
 ```
 pipenv shell # run this within project root
 cd server
-python manage.py makemigrations
-python manage.py migrate
+python manage.py makemigrations --settings=project.settings.prod
+python manage.py migrate --settings=project.settings.prod
 ```
 
 ### admin Landing page:
@@ -62,6 +62,7 @@ localhost:8000/admin
 ```
 pipenv shell # Run this within project root
 yarn prod:build # Should create necessary static files in `./server/frontend/static/dist/js/bundle.js`
+python manage.py collectstatic --settings=project.settings.prod # Aggregates all static files to `./server/project/staticfiles`
 python manage.py runserver --settings=project.settings.prod # Starts Django server. Then go go to localhost:8000 to see results
 ```
 
