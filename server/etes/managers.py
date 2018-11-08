@@ -9,7 +9,12 @@ class UserManager(BaseUserManager):
             raise ValueError('The email must be set')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        # user.set_password(password)
+        user.set_password(password)
+        if extra_fields.get('is_superuser') is True:
+            user.is_admin = True
+            user.is_superuser = True
+            user.is_staff = True
+
         user.save(using=self._db)
         return user
 

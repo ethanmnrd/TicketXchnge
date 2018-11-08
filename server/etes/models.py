@@ -26,6 +26,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # password = models.CharField(max_length=32, widget = forms.PasswordInput)
     password = models.CharField(max_length=200, default="password")
     created_at = models.DateTimeField(auto_now_add=True)
+    is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -39,9 +40,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_first_name(self):
         return self.f_name
 
-    def save(self, *args, **kwargs):
-        self.password = make_password(self.password)
-        super(User, self).save(*args, **kwargs)
+    def is_staff(self):
+        return self.is_admin
+
+    # def save(self, *args, **kwargs):
+    #     self.password = make_password(self.password)
+    #     super(User, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{} - {} {}".format(self.user_name, self.f_name, self.l_name)
