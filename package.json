@@ -37,7 +37,7 @@
     "lint-fix": "prettier --single-quote --write \"{,client/**}/*.{js,jsx}\" && yarn lint --fix",
     "reinstall": "rm -rf node_modules/ && yarn install",
     "test": "jest --coverage",
-    "heroku-postbuild": "yarn prod:build"
+    "postinstall": "yarn prod:build"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
