@@ -80,8 +80,7 @@ class Event(models.Model):
     #     based_fields=['event_city'], zoom=7, default=Point(1.0, 1.0))
     # objects = models.GeoManager()
     event_date = models.DateTimeField()
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.TimeField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 

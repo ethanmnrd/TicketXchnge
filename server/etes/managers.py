@@ -46,10 +46,10 @@ class TicketManager(BaseUserManager):
 class EventManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_event(self, event_name, event_venue, event_date, start_time, end_time, **extra_fields):
+    def create_event(self, event_name, event_venue, event_date, start_time, **extra_fields):
         if not event_venue:
             raise ValueError('Must have event venue')
         event = self.model(event_name=event_name,
-                           event_venue=event_venue, event_date=event_date, start_time=start_time, end_time=end_time)
+                           event_venue=event_venue, event_date=event_date, start_time=start_time)
         event.save(using=self._db)
         return event
