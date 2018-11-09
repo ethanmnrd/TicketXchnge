@@ -23,6 +23,11 @@
     }
   ],
   "license": "Apache",
+  "engines": {
+    "node": "8.12.x",
+    "npm": "6.4.1",
+    "yarn": "1.12.x"
+  },
   "scripts": {
     "clean": "rimraf lib dist",
     "dev:wds": "cross-env NODE_ENV=development webpack-dev-server  --progress --mode development --config webpack.config.dev.babel.js",
@@ -31,7 +36,8 @@
     "lint": "eslint client webpack.config.dev.babel.js --ext .js,.jsx",
     "lint-fix": "prettier --single-quote --write \"{,client/**}/*.{js,jsx}\" && yarn lint --fix",
     "reinstall": "rm -rf node_modules/ && yarn install",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "postinstall": "yarn prod:build"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
