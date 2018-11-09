@@ -15,7 +15,6 @@ coverage = "*"
 requests = "*"
 whitenoise = "*"
 gunicorn = "*"
-django-heroku = "*"
 
 [dev-packages]
 coverage = "*"
