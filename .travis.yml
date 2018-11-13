@@ -21,7 +21,6 @@ matrix:
         - BUILD_ON_TRAVIS=true
       matrix:
         - DJANGO=2.1.2 DB=mysql
-      branches:
       only:
         - /.*/
       cache:
