@@ -79,7 +79,7 @@ class Event(models.Model):
     # event_location = LocationField(
     #     based_fields=['event_city'], zoom=7, default=Point(1.0, 1.0))
     # objects = models.GeoManager()
-    event_date = models.DateTimeField()
+    event_date = models.DateField()
     start_time = models.TimeField()
 
     created_at = models.DateTimeField(auto_now_add=True)
