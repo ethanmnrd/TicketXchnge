@@ -26,6 +26,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # password = models.CharField(max_length=32, widget = forms.PasswordInput)
     password = models.CharField(max_length=200, default="password")
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
@@ -56,6 +57,7 @@ class Ticket(models.Model):
     ticket_event = models.CharField(max_length=200)
     ticket_price = models.FloatField(max_length=25)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     TICKET_TYPE_CHOICES = (
         ('GA', 'General Admission'),
@@ -81,8 +83,8 @@ class Event(models.Model):
     # objects = models.GeoManager()
     event_date = models.DateField()
     start_time = models.TimeField()
-
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = EventManager()
 
