@@ -36,13 +36,15 @@ class User(AbstractBaseUser):
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "{} - {} {}".format(self.user_name, self.f_name, self.l_name)
+        return "{} - {} {}".format(self.uid, self.f_name, self.l_name)
 
 
 class Ticket(models.Model):
     tid = models.AutoField(primary_key=True, null=False)
     ticket_event = models.CharField(max_length=200)
     ticket_price = models.FloatField(max_length=25)
+    owner = models.ForeignKey('User', on_delete=models.CASCADE)
+    event = models.ForeignKey('Event', on_delete=models.CASCADE)
 
     TICKET_TYPE_CHOICES = (
         ('GA', 'General Admission'),
