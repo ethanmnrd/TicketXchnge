@@ -2,6 +2,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { push } from 'connected-react-router';
 import { post } from 'axios';
 import {
   Alert,
@@ -17,7 +19,7 @@ import {
   Row
 } from 'reactstrap';
 import { setJWT } from '../actions/index';
-import { USERS_API_ROUTE } from '../../util/routes';
+import { HOME_PAGE_ROUTE, USERS_API_ROUTE } from '../../util/routes';
 
 class SignUp extends Component<Props, State> {
   state = {
@@ -27,6 +29,8 @@ class SignUp extends Component<Props, State> {
     password: '',
     formValid: false,
     emailValid: true,
+    firstNameValid: true,
+    lastNameValid: true,
     passwordValid: true,
     confirmation: ''
   };
@@ -38,7 +42,9 @@ class SignUp extends Component<Props, State> {
   };
 
   validateForm = () => {
-    const { email, password } = this.state;
+    const {
+      email, password, firstName, lastName
+    } = this.state;
     // @TODO: Add handling for already used email
     const emailValid = email.match(
       /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g
@@ -46,8 +52,16 @@ class SignUp extends Component<Props, State> {
       ? false
       : true;
     const passwordValid = password.length >= 8;
-    const formValid = emailValid && passwordValid;
-    this.setState({ emailValid, passwordValid, formValid });
+    const firstNameValid = firstName.length > 0;
+    const lastNameValid = lastName.length > 0;
+    const formValid = emailValid && passwordValid && firstNameValid && lastNameValid;
+    this.setState({
+      emailValid,
+      passwordValid,
+      formValid,
+      firstNameValid,
+      lastNameValid
+    });
   };
 
   handleSubmitForm = (e) => {
@@ -64,6 +78,7 @@ class SignUp extends Component<Props, State> {
     })
       .then((res) => {
         this.props.setJWT(res.data.token);
+        this.props.push(HOME_PAGE_ROUTE);
         this.setState({ confirmation: 'SUCCESS' });
       })
       .catch((err) => {
@@ -106,7 +121,9 @@ class SignUp extends Component<Props, State> {
                   placeholder="Enter First Name"
                   type="text"
                   name="firstName"
+                  invalid={!this.state.firstNameValid}
                 />
+                <FormFeedback>Name cannot be empty!</FormFeedback>
               </FormGroup>
             </Col>
             <Col md={6}>
@@ -118,7 +135,9 @@ class SignUp extends Component<Props, State> {
                   placeholder="Enter Last Name"
                   type="text"
                   name="lastName"
+                  invalid={!this.state.lastNameValid}
                 />
+                <FormFeedback>Name cannot be empty!</FormFeedback>
               </FormGroup>
             </Col>
             <Col md={6}>
@@ -151,13 +170,15 @@ class SignUp extends Component<Props, State> {
               </FormGroup>
             </Col>
           </Row>
-          <Button
-            disabled={!this.state.formValid}
-            onClick={this.handleSubmitForm}
-            color="primary"
-          >
-            Create Account
-          </Button>
+          <Link to={HOME_PAGE_ROUTE}>
+            <Button
+              disabled={!this.state.formValid}
+              onClick={this.handleSubmitForm}
+              color="primary"
+            >
+              Create Account
+            </Button>
+          </Link>
           {this.renderAlert()}
         </Form>
       </Container>
@@ -167,5 +188,5 @@ class SignUp extends Component<Props, State> {
 
 export default connect(
   null,
-  { setJWT }
+  { setJWT, push }
 )(SignUp);

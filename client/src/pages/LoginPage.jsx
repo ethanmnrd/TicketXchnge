@@ -2,11 +2,12 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import { post } from 'axios';
-import { Modal, ModalHeader } from 'reactstrap';
+import { Alert, Modal, ModalHeader } from 'reactstrap';
 import SignUp from '../containers/SignUp';
 import { setJWT } from '../actions/index';
-import { LOGIN_AUTH_API_ROUTE } from '../../util/routes';
+import { HOME_PAGE_ROUTE, LOGIN_AUTH_API_ROUTE } from '../../util/routes';
 
 class LoginPage extends Component<Props, State> {
   constructor(props) {
@@ -14,7 +15,8 @@ class LoginPage extends Component<Props, State> {
     this.state = {
       email: '',
       password: '',
-      modalOpen: false
+      modalOpen: false,
+      error: null
     };
   }
 
@@ -32,20 +34,31 @@ class LoginPage extends Component<Props, State> {
     })
       .then((res) => {
         this.props.setJWT(res.data.token);
+        this.props.push(HOME_PAGE_ROUTE);
       })
       .catch((err) => {
         console.dir(err);
+        if (err.response.status === 401) {
+          this.setState({ error: 'Incorrect account credentials' });
+        }
       });
   };
 
+  renderAlert = () => (
+    <Alert color="danger" style={{ marginTop: '20px' }}>
+      {this.state.error}
+    </Alert>
+  );
+
   render() {
+    const { error } = this.state;
     console.dir(this.state);
     return (
       <div className="container align-middle" style={{ marginTop: '50px' }}>
         <h1 style={{ textAlign: 'center' }} className="display-1">
           TicketX
         </h1>
-        <form>
+        <form onSubmit={this.handleSubmitForm}>
           <div className="form-group">
             <label>Email address</label>
             <input
@@ -86,6 +99,7 @@ class LoginPage extends Component<Props, State> {
           >
             Create Account
           </button>
+          {error != null ? this.renderAlert() : null}
           <Modal
             style={{ paddingBottom: '25px' }}
             size="lg"
@@ -104,5 +118,5 @@ class LoginPage extends Component<Props, State> {
 
 export default connect(
   null,
-  { setJWT }
+  { setJWT, push }
 )(LoginPage);

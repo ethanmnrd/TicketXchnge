@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import {
   Collapse,
   DropdownMenu,
@@ -37,11 +38,10 @@ class NavMenu extends React.Component {
   }
 
   handleLogout = (e) => {
-    this.props.restoreJWT();
+    this.props.deleteJWT();
   };
 
   componentDidMount = () => {
-    console.log('In NavMenu componentDidMount()');
     this.props.restoreJWT();
   };
 
@@ -89,7 +89,7 @@ class NavMenu extends React.Component {
                 </NavLink>
               </NavItem>
             ))}
-            {this.props.jwt ? this.renderProfileDropdown() : null}
+            {this.props.jwt !== null ? this.renderProfileDropdown() : null}
           </Nav>
         </Collapse>
       </Navbar>
@@ -103,5 +103,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { restoreJWT, deleteJWT }
+  { restoreJWT, deleteJWT, push }
 )(NavMenu);
