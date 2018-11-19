@@ -41,10 +41,6 @@ class NavMenu extends React.Component {
     this.props.deleteJWT();
   };
 
-  componentDidMount = () => {
-    this.props.restoreJWT();
-  };
-
   renderProfileDropdown = () => (
     <UncontrolledDropdown nav inNavbar>
       <DropdownToggle nav caret>
@@ -52,7 +48,7 @@ class NavMenu extends React.Component {
       </DropdownToggle>
       <DropdownMenu right>
         <DropdownItem>
-          <Link exact tag={RRNavLink} to={PROFILE_PAGE_ROUTE}>
+          <Link to={PROFILE_PAGE_ROUTE}>
             Checkout Profile
           </Link>
         </DropdownItem>
@@ -61,6 +57,10 @@ class NavMenu extends React.Component {
       </DropdownMenu>
     </UncontrolledDropdown>
   );
+
+  componentDidMount = () => {
+    this.props.restoreJWT();
+  };
 
   render() {
     const { isOpen } = this.state;
@@ -83,7 +83,7 @@ class NavMenu extends React.Component {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
             {routes.map(({ name, route }) => (
-              <NavItem>
+              <NavItem key={route}>
                 <NavLink exact tag={RRNavLink} to={route}>
                   {name}
                 </NavLink>
