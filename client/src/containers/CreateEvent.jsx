@@ -14,16 +14,18 @@ import {
   Row
 } from 'reactstrap';
 import LocationSearchInput from './LocationSearchInput';
+import Map from './Map';
 
 export default class CreateEvent extends Component<Props, State> {
   state = {
     formValid: 'false',
+    lat: null,
+    lng: null,
+    city: null,
     eventName: '',
     eventStartDate: '',
     eventStartTime: '',
-    venueName: '',
-    venueAddress: '',
-    validAddress: ''
+    venueAddress: ''
   };
 
   handleUserInput = (e) => {
@@ -33,15 +35,24 @@ export default class CreateEvent extends Component<Props, State> {
   };
 
   handleLocationChange = (address) => {
-    this.setState({ venueAddress: address });
+    this.setState({ lat: null, lng: null, venueAddress: address });
   };
 
   handleLocationSelect = (address) => {
     geocodeByAddress(address)
-      .then(results => getLatLng(results[0]))
-      .then((latLng) => {
-        this.setState({ venueAddress: address, validAddress: address });
-        console.log('Success', latLng);
+      .then((results) => {
+        this.setState({ venueAddress: address });
+        const city = results[0].address_components.find(
+          e => e.types[0] === 'locality'
+        ).long_name;
+        this.setState({ city });
+        return getLatLng(results[0]);
+      })
+      .then(({ lat, lng }) => {
+        this.setState({
+          lat,
+          lng
+        });
       })
       .catch(error => console.error('Error', error));
   };
@@ -49,111 +60,78 @@ export default class CreateEvent extends Component<Props, State> {
   render() {
     const {
       formValid,
+      lat,
+      lng,
       eventName,
       eventStartDate,
       eventStartTime,
-      venueName,
       venueAddress
     } = this.state;
     return (
       <Container>
         <h4 className="display-4 text-center">Fill us in on your details</h4>
         <Jumbotron style={{ paddingTop: '25px', marginTop: '25px' }}>
-          <Form>
-            <Row form>
-              <Col md={6}>
-                <FormGroup>
-                  <Label for="eventName">
-                    <b>Event Name</b>
-                  </Label>
-                  <Input
-                    value={eventName}
-                    type="text"
-                    name="eventName"
-                    onChange={this.handleUserInput}
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={3}>
-                <FormGroup>
-                  <Label for="eventStartDate">
-                    <b>Start Date</b>
-                  </Label>
-                  <Input
-                    value={eventStartDate}
-                    type="date"
-                    name="eventStartDate"
-                    onChange={this.handleUserInput}
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={3}>
-                <FormGroup>
-                  <Label>
-                    <b>Start Time</b>
-                  </Label>
-                  <Input
-                    value={eventStartTime}
-                    type="time"
-                    name="eventStartTime"
-                    onChange={this.handleUserInput}
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={6}>
-                {/* <FormGroup>
-                  <Label for="venueName">
-                    <b>Venue Details</b>
-                  </Label>
-                  <Input
-                    value={venueName}
-                    type="text"
-                    name="venueName"
-                    placeholder="Venue Name"
-                    onChange={this.handleUserInput}
-                  />
-                </FormGroup> */}
-                <FormGroup>
-                  <Label>
-                    <b>Venue Details</b>
-                  </Label>
-                  <LocationSearchInput
-                    address={venueAddress}
-                    handleLocationChange={this.handleLocationChange}
-                    handleLocationSelect={this.handleLocationSelect}
-                  />
-                </FormGroup>
-                {/* <FormGroup>
-                  <Input
-                    value={venueAddress}
-                    type="text"
-                    name="venueAddress"
-                    placeholder="Venue Address"
-                    onChange={this.handleUserInput}
-                  />
-                </FormGroup> */
-                /* <FormGroup>
-                  <Input
-                    value={venueCity}
-                    type="text"
-                    name="venueCity"
-                    placeholder="Venue City"
-                    onChange={this.handleUserInput}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Input
-                    value={venueZip}
-                    type="number"
-                    name="venueZip"
-                    placeholder="Venue ZIP Code"
-                    onChange={this.handleUserInput}
-                  />
-                </FormGroup> */}
-              </Col>
-            </Row>
-          </Form>
-          <Button className="float-right" disabled={formValid} color="primary">
+          <Row>
+            <Col md={6}>
+              <Form>
+                <Col md={12}>
+                  <FormGroup>
+                    <Label for="eventName">
+                      <b>Event Name</b>
+                    </Label>
+                    <Input
+                      value={eventName}
+                      type="text"
+                      name="eventName"
+                      onChange={this.handleUserInput}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md={12}>
+                  <FormGroup>
+                    <Label for="eventStartDate">
+                      <b>Start Date</b>
+                    </Label>
+                    <Input
+                      value={eventStartDate}
+                      type="date"
+                      name="eventStartDate"
+                      onChange={this.handleUserInput}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md={12}>
+                  <FormGroup>
+                    <Label>
+                      <b>Start Time</b>
+                    </Label>
+                    <Input
+                      value={eventStartTime}
+                      type="time"
+                      name="eventStartTime"
+                      onChange={this.handleUserInput}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md={12}>
+                  <FormGroup>
+                    <Label>
+                      <b>Venue Address</b>
+                    </Label>
+                    <LocationSearchInput
+                      address={venueAddress}
+                      handleLocationChange={this.handleLocationChange}
+                      handleLocationSelect={this.handleLocationSelect}
+                    />
+                  </FormGroup>
+                </Col>
+              </Form>
+            </Col>
+            <Col md={6}>
+              <Map lat={lat} lng={lng} venueAddress={venueAddress} />
+            </Col>
+          </Row>
+          <Button className="float-right" disabled={!formValid} color="primary">
             Continue
           </Button>
         </Jumbotron>
