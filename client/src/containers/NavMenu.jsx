@@ -83,7 +83,7 @@ class NavMenu extends React.Component {
           <Nav className="ml-auto" navbar>
             {routes.map(({ name, route }) => (
               <NavItem key={route}>
-                <NavLink exact tag={RRNavLink} to={route}>
+                <NavLink location={this.props.router.location} exact tag={RRNavLink} to={route}>
                   {name}
                 </NavLink>
               </NavItem>
@@ -97,7 +97,8 @@ class NavMenu extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  jwt: state.jwt
+  jwt: state.jwt,
+  router: state.router
 });
 
 export default connect(
