@@ -15,21 +15,17 @@ from .managers import EventManager, TicketManager, UserManager
 class User(AbstractBaseUser):
     uid = models.AutoField(primary_key=True, null=False)
     email = models.EmailField(max_length=200, unique=True)
-    f_name = models.CharField(max_length=300, blank=True)
-    l_name = models.CharField(max_length=300, blank=True)
+    f_name = models.CharField(max_length=300)
+    l_name = models.CharField(max_length=300)
     password = models.CharField(max_length=200, default="password")
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-
-    def get_full_name(self):
-        full_name = '%s %s' % (self.f_name, self.l_name)
-        return full_name.strip()
-
-    def get_first_name(self):
-        return self.f_name
+  
+    def get_username(self):
+        return self.email
 
     def save(self, *args, **kwargs):
         self.password = make_password(self.password)
