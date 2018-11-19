@@ -1,10 +1,14 @@
 // @flow
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { post } from 'axios';
 import { Modal, ModalHeader } from 'reactstrap';
 import SignUp from '../containers/SignUp';
+import { setJWT } from '../actions/index';
+import { LOGIN_AUTH_API_ROUTE } from '../../util/routes';
 
-export default class LoginPage extends Component<Props, State> {
+class LoginPage extends Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +23,23 @@ export default class LoginPage extends Component<Props, State> {
     this.setState({ modalOpen: !this.state.modalOpen });
   };
 
+  handleSubmitForm = (e) => {
+    e.preventDefault();
+    const { email, password } = this.state;
+    post(LOGIN_AUTH_API_ROUTE, {
+      email,
+      password
+    })
+      .then((res) => {
+        this.props.setJWT(res.data.token);
+      })
+      .catch((err) => {
+        console.dir(err);
+      });
+  };
+
   render() {
+    console.dir(this.state);
     return (
       <div className="container align-middle" style={{ marginTop: '50px' }}>
         <h1 style={{ textAlign: 'center' }} className="display-1">
@@ -34,7 +54,7 @@ export default class LoginPage extends Component<Props, State> {
               aria-describedby="emailHelp"
               placeholder="Enter email"
               value={this.state.email}
-              onChange={e => this.setState({ email: e.value })}
+              onChange={e => this.setState({ email: e.target.value })}
             />
           </div>
           <div className="form-group">
@@ -44,7 +64,7 @@ export default class LoginPage extends Component<Props, State> {
               className="form-control"
               placeholder="Password"
               value={this.state.password}
-              onChange={e => this.setState({ password: e.value })}
+              onChange={e => this.setState({ password: e.target.value })}
             />
           </div>
           <div className="form-check">
@@ -55,6 +75,7 @@ export default class LoginPage extends Component<Props, State> {
             type="submit"
             className="btn btn-primary"
             style={{ marginTop: '20px' }}
+            onClick={this.handleSubmitForm}
           >
             Sign In
           </button>
@@ -80,3 +101,8 @@ export default class LoginPage extends Component<Props, State> {
     );
   }
 }
+
+export default connect(
+  null,
+  { setJWT }
+)(LoginPage);

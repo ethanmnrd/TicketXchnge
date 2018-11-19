@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Collapse,
   Navbar,
@@ -16,9 +17,10 @@ import {
   CHECKOUT_PAGE_ROUTE,
   SELL_PAGE
 } from '../../util/routes';
+import { restoreJWT } from '../actions/index';
 // @ TODO: These CSS properties aren't given priority. Find out why
 
-export default class NavMenu extends React.Component {
+class NavMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,6 +32,11 @@ export default class NavMenu extends React.Component {
     const { isOpen } = this.state;
     this.setState({ isOpen: !isOpen });
   }
+
+  componentDidMount = () => {
+    console.log('In NavMenu componentDidMount()');
+    this.props.restoreJWT();
+  };
 
   render() {
     const { isOpen } = this.state;
@@ -67,3 +74,8 @@ export default class NavMenu extends React.Component {
     );
   }
 }
+
+export default connect(
+  null,
+  { restoreJWT }
+)(NavMenu);

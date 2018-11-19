@@ -26,10 +26,9 @@ class UserCreate(generics.CreateAPIView):
         token = jwt_encode_handler(payload)
         return Response({"token": token}, status=status.HTTP_201_CREATED)
 
-class UserAuth(generics.ListCreateAPIView):
+class UserAuth(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    
     # Gets token
     def post(self, request, *args, **kwargs):
         user = authenticate(email=request.data['email'], password=request.data['password'])

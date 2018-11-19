@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { post } from 'axios';
 import {
   Alert,
@@ -15,9 +16,10 @@ import {
   Label,
   Row
 } from 'reactstrap';
+import { setJWT } from '../actions/index';
 import { USERS_API_ROUTE } from '../../util/routes';
 
-export default class SignUp extends Component<Props, State> {
+class SignUp extends Component<Props, State> {
   state = {
     email: '',
     firstName: '',
@@ -54,18 +56,17 @@ export default class SignUp extends Component<Props, State> {
       firstName, lastName, email, password
     } = this.state;
     post(USERS_API_ROUTE, {
-      firstName,
-      lastName,
+      f_name: firstName,
+      l_name: lastName,
       email,
       user_name: email,
       password
     })
       .then((res) => {
-        console.dir(res);
+        this.props.setJWT(res.data.token);
         this.setState({ confirmation: 'SUCCESS' });
       })
       .catch((err) => {
-        console.dir(err);
         this.setState({ confirmation: `ERROR: ${err}` });
       });
   };
@@ -163,3 +164,8 @@ export default class SignUp extends Component<Props, State> {
     );
   }
 }
+
+export default connect(
+  null,
+  { setJWT }
+)(SignUp);
