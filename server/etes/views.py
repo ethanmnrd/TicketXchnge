@@ -10,6 +10,7 @@ from etes.models import User, Ticket, Event
 from etes.serializers import UserSerializer, TicketSerializer, EventSerializer
 from pprint import pprint
 from json import dumps
+from datetime import datetime
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -77,4 +78,4 @@ class EventCreate(generics.CreateAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        return self.create(request, *args, event_date=datetime.strptime(request.data['event_date'], '%Y-%m-%d').date(), start_time = datetime.strptime(request.data['start_time'], '%H:%M').date(), **kwargs)
