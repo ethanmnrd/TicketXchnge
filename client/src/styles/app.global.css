@@ -19,6 +19,7 @@
 .evenRow,
 .oddRow {
   border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
 }
 .oddRow {
   background-color: #fafafa;

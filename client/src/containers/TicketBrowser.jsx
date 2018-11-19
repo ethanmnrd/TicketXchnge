@@ -22,6 +22,7 @@ export default class TicketBrowser extends Component<Props, State> {
 
   handleQueryInput = (e) => {
     const query = e.target.value;
+    this.setState({ query });
     this.updateTable(query);
   };
 
@@ -99,7 +100,7 @@ export default class TicketBrowser extends Component<Props, State> {
           <Col sm={{ size: 6, offset: 3 }}>
             <InputGroup>
               <Input
-                values={query}
+                value={query}
                 onChange={this.handleQueryInput}
                 placeholder="What events are happening..."
               />

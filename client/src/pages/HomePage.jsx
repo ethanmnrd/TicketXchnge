@@ -14,6 +14,9 @@ const HomePage = () => (
         { property: 'og:title', content: APP_NAME }
       ]}
     />
+    <h4 style={{ textAlign: 'center' }} className="display-4">
+      What events are you looking for?
+    </h4>
     <TicketBrowser />
   </div>
 );
