@@ -169,3 +169,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BUILD_DIR),
 )
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
