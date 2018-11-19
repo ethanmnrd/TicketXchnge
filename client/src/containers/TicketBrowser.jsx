@@ -5,11 +5,7 @@ import { AutoSizer, Column, Table } from 'react-virtualized';
 import { get } from 'axios';
 import { debounce } from 'lodash';
 import {
-  Container,
-  Col,
-  Input,
-  InputGroup,
-  Row
+  Container, Col, Input, InputGroup, Row
 } from 'reactstrap';
 import { TICKETS_API_ROUTE } from '../../util/routes';
 

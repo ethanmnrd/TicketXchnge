@@ -8,18 +8,23 @@ import {
   Input,
   InputGroup,
   InputGroupAddon,
+  Modal,
+  ModalHeader,
   Row
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import { get } from 'axios';
 import { debounce } from 'lodash';
+import SellTicket from '../containers/SellTicket';
 import { CREATE_EVENT_PAGE, EVENTS_API_ROUTE } from '../../util/routes';
 
 export default class SellPage extends Component<Props, State> {
   state = {
     query: '',
     events: [],
+    selectedEvent: null,
+    modalOpen: false,
     noRowsMessage: 'Loading...'
   };
 
@@ -28,6 +33,11 @@ export default class SellPage extends Component<Props, State> {
       return 'headerRow';
     }
     return index % 2 === 0 ? 'evenRow' : 'oddRow';
+  };
+
+  handleRowClick = ({ event, index, rowData }) => {
+    event.preventDefault();
+    this.setState({ modalOpen: true, selectedEvent: rowData });
   };
 
   handleQueryInput = (e) => {
@@ -56,12 +66,19 @@ export default class SellPage extends Component<Props, State> {
       });
   }, 500);
 
+  toggleModal = (e) => {
+    e.preventDefault();
+    this.setState({ modalOpen: !this.state.modalOpen, selectedEvent: null });
+  };
+
   componentDidMount = () => {
     this.updateTable(this.state.query);
   };
 
   render() {
-    const { events, noRowsMessage, query } = this.state;
+    const {
+      events, noRowsMessage, query, selectedEvent
+    } = this.state;
     return (
       <Container fluid>
         <Row>
@@ -91,6 +108,7 @@ export default class SellPage extends Component<Props, State> {
                   noRowsRenderer={() => (
                     <div className="noRows">{noRowsMessage}</div>
                   )}
+                  onRowClick={this.handleRowClick}
                   rowCount={events.length}
                   rowGetter={({ index }) => events[index]}
                   rowHeight={50}
@@ -126,11 +144,25 @@ export default class SellPage extends Component<Props, State> {
             </AutoSizer>
           </Col>
         </Row>
-
         <p style={{ textAlign: 'center', marginTop: '425px' }} className="lead">
           Didn't find what you are looking for?
           <Link to={CREATE_EVENT_PAGE}> Create an Event.</Link>
         </p>
+        <Modal
+          size="lg"
+          isOpen={this.state.modalOpen}
+          toggle={this.toggleModal}
+          className={this.props.className}
+        >
+          <ModalHeader toggle={this.toggleModal}>
+            {this.state.selectedEvent
+              ? `${selectedEvent.event_name} at ${
+                selectedEvent.event_venue
+              } on ${selectedEvent.event_date}`
+              : null}
+          </ModalHeader>
+          <SellTicket eventDetails={selectedEvent} />
+        </Modal>
       </Container>
     );
   }

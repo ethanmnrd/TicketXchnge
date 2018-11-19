@@ -55,6 +55,8 @@ class TicketListCreate(generics.ListCreateAPIView):
     serializer_class = TicketSerializer
     
     def post(self, request, *args, **kwargs):
+        payload = jwt_decode_handler(request.META['HTTP_AUTHORIZATION'])
+        request.data['owner'] = payload['user_id']
         return self.create(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):

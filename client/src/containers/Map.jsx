@@ -16,7 +16,7 @@ export class MapContainer extends Component {
         zoom={10}
       >
         {lat && lng ? (
-          <Marker title={venueAddress} name="SOMA" position={{ lat, lng }} />
+          <Marker title={venueAddress} position={{ lat, lng }} />
         ) : null}
       </Map>
     );

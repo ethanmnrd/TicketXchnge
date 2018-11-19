@@ -67,7 +67,6 @@ export default class CreateEvent extends Component<Props, State> {
     const {
       eventName, venue, city, eventDate, eventTime
     } = this.state;
-    console.dir(this.state);
     post(EVENTS_API_ROUTE, {
       event_name: eventName,
       event_venue: venue,
