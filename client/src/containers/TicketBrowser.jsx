@@ -3,13 +3,12 @@
 import React, { Component } from 'react';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import { get } from 'axios';
+import { debounce } from 'lodash';
 import {
-  Button,
   Container,
   Col,
   Input,
   InputGroup,
-  InputGroupAddon,
   Row
 } from 'reactstrap';
 import { TICKETS_API_ROUTE } from '../../util/routes';
@@ -17,11 +16,44 @@ import { TICKETS_API_ROUTE } from '../../util/routes';
 export default class TicketBrowser extends Component<Props, State> {
   state = {
     query: '',
-    tickets: []
+    tickets: [],
+    noRowsMessage: ''
+  };
+
+  handleQueryInput = (e) => {
+    const query = e.target.value;
+    this.updateTable(query);
+  };
+
+  updateTable = debounce((query) => {
+    this.setState({ tickets: [], noRowsMessage: 'Loading...' });
+    get(TICKETS_API_ROUTE, {
+      params: {
+        ticket_event: query
+      }
+    })
+      .then((res) => {
+        // console.dir(res);
+        if (res.data.length > 0) {
+          this.setState({ tickets: res.data });
+        } else {
+          this.setState({ noRowsMessage: 'No Events Found' });
+        }
+      })
+      .catch((err) => {
+        console.dir(err);
+      });
+  }, 500);
+
+  getRowClassName = ({ index }) => {
+    if (index < 0) {
+      return 'headerRow';
+    }
+    return index % 2 === 0 ? 'evenRow' : 'oddRow';
   };
 
   renderTable = () => {
-    const { tickets } = this.state;
+    const { tickets, noRowsMessage } = this.state;
     return (
       <AutoSizer>
         {({ width }) => (
@@ -30,7 +62,7 @@ export default class TicketBrowser extends Component<Props, State> {
             headerHeight={50}
             headerClassName=""
             height={300}
-            noRowsRenderer={() => <div className="noRows">No Results</div>}
+            noRowsRenderer={() => <div className="noRows">{noRowsMessage}</div>}
             rowCount={tickets.length}
             rowGetter={({ index }) => tickets[index]}
             rowHeight={50}
@@ -44,7 +76,7 @@ export default class TicketBrowser extends Component<Props, State> {
               className="column"
             />
             <Column
-              width={200}
+              width={400}
               label="Event"
               dataKey="ticket_event"
               className="column"
@@ -55,19 +87,8 @@ export default class TicketBrowser extends Component<Props, State> {
     );
   };
 
-  getRowClassName = ({ index }) => {
-    if (index < 0) {
-      return 'headerRow';
-    }
-    return index % 2 === 0 ? 'evenRow' : 'oddRow';
-  };
-
   componentDidMount = () => {
-    get(TICKETS_API_ROUTE)
-      .then(res => this.setState({ tickets: res.data }))
-      .catch((err) => {
-        console.dir(err);
-      });
+    this.updateTable(this.state.query);
   };
 
   render() {
@@ -79,11 +100,9 @@ export default class TicketBrowser extends Component<Props, State> {
             <InputGroup>
               <Input
                 values={query}
+                onChange={this.handleQueryInput}
                 placeholder="What events are happening..."
               />
-              <InputGroupAddon addonType="append">
-                <Button>Search</Button>
-              </InputGroupAddon>
             </InputGroup>
           </Col>
         </Row>

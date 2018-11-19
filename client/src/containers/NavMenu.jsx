@@ -61,7 +61,6 @@ class NavMenu extends React.Component {
   };
 
   render() {
-    console.dir(process.env.GOOGLE_API_KEY);
     const { isOpen } = this.state;
     const routes = this.props.jwt !== null
       ? [
@@ -83,7 +82,12 @@ class NavMenu extends React.Component {
           <Nav className="ml-auto" navbar>
             {routes.map(({ name, route }) => (
               <NavItem key={route}>
-                <NavLink location={this.props.router.location} exact tag={RRNavLink} to={route}>
+                <NavLink
+                  location={this.props.router.location}
+                  exact
+                  tag={RRNavLink}
+                  to={route}
+                >
                   {name}
                 </NavLink>
               </NavItem>
