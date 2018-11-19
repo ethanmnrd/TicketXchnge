@@ -15,6 +15,7 @@ coverage = "*"
 requests = "*"
 whitenoise = "*"
 gunicorn = "*"
+djangorestframework-jwt = "*"
 
 [dev-packages]
 coverage = "*"
