@@ -2,32 +2,43 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { AppContainer } from 'react-hot-loader';
+import { applyMiddleware, compose, createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
 import ReduxPromise from 'redux-promise';
-import reducers from './reducers';
+import { ConnectedRouter, routerMiddleware } from 'connected-react-router';
+import { createBrowserHistory } from 'history';
+import createRootReducer from './reducers';
 
 import App from './App';
 import { APP_CONTAINER_SELECTOR } from '../util/config';
 
-const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 const rootEl = document.querySelector(APP_CONTAINER_SELECTOR);
+
+// Redux-Dev-Tools
+/* eslint-disable no-underscore-dangle */
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const history = createBrowserHistory();
 
 const wrapApp = AppComponent => (
   <Provider
-    store={createStoreWithMiddleware(
-      reducers,
-      window.__REDUX_DEVTOOLS_EXTENSION__
-        && window.__REDUX_DEVTOOLS_EXTENSION__()
+    store={createStore(
+      createRootReducer(history),
+      composeEnhancers(
+        applyMiddleware(
+          routerMiddleware(history), // for dispatching history actions
+          ReduxPromise
+        )
+      )
     )}
   >
-    <BrowserRouter>
+    <ConnectedRouter history={history}>
       <AppContainer>
         <AppComponent />
       </AppContainer>
-    </BrowserRouter>
+    </ConnectedRouter>
   </Provider>
 );
 

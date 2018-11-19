@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
 import JWTReducer from './reducer_jwt';
 
-const rootReducer = combineReducers({
-  /* IMPORTANT */
+export default history => combineReducers({
+  router: connectRouter(history),
   jwt: JWTReducer
 });
-export default rootReducer;
