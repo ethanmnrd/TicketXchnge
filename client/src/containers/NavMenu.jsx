@@ -48,9 +48,7 @@ class NavMenu extends React.Component {
       </DropdownToggle>
       <DropdownMenu right>
         <DropdownItem>
-          <Link to={PROFILE_PAGE_ROUTE}>
-            Checkout Profile
-          </Link>
+          <Link to={PROFILE_PAGE_ROUTE}>Checkout Profile</Link>
         </DropdownItem>
         <DropdownItem divider />
         <DropdownItem onClick={this.handleLogout}>Logout</DropdownItem>
@@ -63,6 +61,7 @@ class NavMenu extends React.Component {
   };
 
   render() {
+    console.dir(process.env.GOOGLE_API_KEY);
     const { isOpen } = this.state;
     const routes = this.props.jwt !== null
       ? [

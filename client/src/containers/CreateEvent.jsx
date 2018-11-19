@@ -1,23 +1,19 @@
 // @flow
 
 import React, { Component } from 'react';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import {
   Button,
   Container,
   Col,
   Form,
-  FormFeedback,
   FormGroup,
-  FormText,
   Input,
-  InputGroup,
-  InputGroupAddon,
   Jumbotron,
   Label,
   Row
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { CREATE_EVENT_PAGE } from '../../util/routes';
+import LocationSearchInput from './LocationSearchInput';
 
 export default class CreateEvent extends Component<Props, State> {
   state = {
@@ -25,12 +21,9 @@ export default class CreateEvent extends Component<Props, State> {
     eventName: '',
     eventStartDate: '',
     eventStartTime: '',
-    eventEndDate: '',
-    eventEndTime: '',
     venueName: '',
     venueAddress: '',
-    venueCity: '',
-    venueZip: ''
+    validAddress: ''
   };
 
   handleUserInput = (e) => {
@@ -39,18 +32,28 @@ export default class CreateEvent extends Component<Props, State> {
     this.setState({ [name]: value });
   };
 
+  handleLocationChange = (address) => {
+    this.setState({ venueAddress: address });
+  };
+
+  handleLocationSelect = (address) => {
+    geocodeByAddress(address)
+      .then(results => getLatLng(results[0]))
+      .then((latLng) => {
+        this.setState({ venueAddress: address, validAddress: address });
+        console.log('Success', latLng);
+      })
+      .catch(error => console.error('Error', error));
+  };
+
   render() {
     const {
+      formValid,
       eventName,
       eventStartDate,
       eventStartTime,
-      eventEndDate,
-      eventEndTime,
       venueName,
-      venueAddress,
-      venueCity,
-      formValid,
-      venueZip
+      venueAddress
     } = this.state;
     return (
       <Container>
@@ -58,7 +61,7 @@ export default class CreateEvent extends Component<Props, State> {
         <Jumbotron style={{ paddingTop: '25px', marginTop: '25px' }}>
           <Form>
             <Row form>
-              <Col md={12}>
+              <Col md={6}>
                 <FormGroup>
                   <Label for="eventName">
                     <b>Event Name</b>
@@ -97,34 +100,8 @@ export default class CreateEvent extends Component<Props, State> {
                   />
                 </FormGroup>
               </Col>
-              <Col md={3}>
-                <FormGroup>
-                  <Label for="eventEndDate">
-                    <b>End Date</b>
-                  </Label>
-                  <Input
-                    value={eventEndDate}
-                    type="date"
-                    name="eventEndDate"
-                    onChange={this.handleUserInput}
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={3}>
-                <FormGroup>
-                  <Label for="eventEndTime">
-                    <b>End Time</b>
-                  </Label>
-                  <Input
-                    value={eventEndTime}
-                    type="time"
-                    name="eventEndTime"
-                    onChange={this.handleUserInput}
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={8}>
-                <FormGroup>
+              <Col md={6}>
+                {/* <FormGroup>
                   <Label for="venueName">
                     <b>Venue Details</b>
                   </Label>
@@ -135,8 +112,18 @@ export default class CreateEvent extends Component<Props, State> {
                     placeholder="Venue Name"
                     onChange={this.handleUserInput}
                   />
-                </FormGroup>
+                </FormGroup> */}
                 <FormGroup>
+                  <Label>
+                    <b>Venue Details</b>
+                  </Label>
+                  <LocationSearchInput
+                    address={venueAddress}
+                    handleLocationChange={this.handleLocationChange}
+                    handleLocationSelect={this.handleLocationSelect}
+                  />
+                </FormGroup>
+                {/* <FormGroup>
                   <Input
                     value={venueAddress}
                     type="text"
@@ -144,8 +131,8 @@ export default class CreateEvent extends Component<Props, State> {
                     placeholder="Venue Address"
                     onChange={this.handleUserInput}
                   />
-                </FormGroup>
-                <FormGroup>
+                </FormGroup> */
+                /* <FormGroup>
                   <Input
                     value={venueCity}
                     type="text"
@@ -162,7 +149,7 @@ export default class CreateEvent extends Component<Props, State> {
                     placeholder="Venue ZIP Code"
                     onChange={this.handleUserInput}
                   />
-                </FormGroup>
+                </FormGroup> */}
               </Col>
             </Row>
           </Form>
