@@ -17,11 +17,9 @@ class UserManager(BaseUserManager):
 class TicketManager(models.Manager):
     use_in_migrations = True
 
-    def create_ticket(self, ticket_event, ticket_type, ticket_price, eventId, ownerId):
-        if not ticket_event:
-            raise ValueError('Must have event ticket is associated to')
+    def create_ticket(self, ticket_event, ticket_type, ticket_price, eventId, ticket_quantity, ownerId):
         ticket = self.model(ticket_event=ticket_event,
-                            ticket_type=ticket_type, ticket_price=ticket_price, owner=ownerId, event=eventId)
+                            ticket_type=ticket_type, ticket_price=ticket_price, ticket_quantity=ticket_quantity, owner=ownerId, event=eventId)
         ticket.save(using=self._db)
         return ticket
 
