@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import CreditCardInput from 'react-credit-card-input';
+import { push } from 'connected-react-router';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import { get } from 'axios';
+import { get, delete as delet } from 'axios';
 import {
   Button,
   Container,
@@ -16,6 +17,7 @@ import {
   Row
 } from 'reactstrap';
 import LocationSearchInput from '../containers/LocationSearchInput';
+import { DELETE_TICKET_API_ROUTE, HOME_PAGE_ROUTE } from '../../util/routes';
 
 class CheckoutPage extends React.Component {
   state = {
@@ -110,7 +112,11 @@ class CheckoutPage extends React.Component {
     }
   };
 
-  handleFormSubmit = () => {};
+  handleSubmitForm = (e) => {
+    e.preventDefault();
+    delet(DELETE_TICKET_API_ROUTE + this.props.ticketDetails.tid);
+    this.props.push(HOME_PAGE_ROUTE);
+  };
 
   handleCardNumber = (e) => {
     const number = e.target.value;
@@ -157,6 +163,7 @@ class CheckoutPage extends React.Component {
   };
 
   render() {
+    console.dir(this.props);
     const { ticket_price } = this.props.ticketDetails;
     const fee = (Math.round(ticket_price * 0.05 * 100) / 100).toFixed(2);
     const {
@@ -334,4 +341,4 @@ const mapStateToProps = state => ({
   ticketDetails: state.router.location.state.ticketDetails
 });
 
-export default connect(mapStateToProps)(CheckoutPage);
+export default connect(mapStateToProps, { push })(CheckoutPage);
