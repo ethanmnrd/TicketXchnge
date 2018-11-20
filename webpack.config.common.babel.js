@@ -45,6 +45,9 @@ export default {
   },
   plugins: [
     // add the plugin to your plugins array
-    new webpack.DefinePlugin({ 'process.env.GOOGLE_API_KEY': JSON.stringify(process.env.GOOGLE_API_KEY) })
+    new webpack.DefinePlugin({
+      'process.env.GOOGLE_API_KEY': JSON.stringify(process.env.GOOGLE_API_KEY),
+      'process.env.UBER_API_KEY': JSON.stringify(process.env.UBER_API_KEY)
+    })
   ]
 };

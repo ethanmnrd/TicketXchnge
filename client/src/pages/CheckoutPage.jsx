@@ -1,6 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import CreditCardInput from 'react-credit-card-input';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import { get } from 'axios';
 import {
+  Button,
   Container,
   Col,
   Form,
@@ -11,31 +15,102 @@ import {
   ListGroupItem,
   Row
 } from 'reactstrap';
-// @ TODO: These CSS properties aren't given priority. Find out why
+import LocationSearchInput from '../containers/LocationSearchInput';
 
-export default class CheckoutPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      creditCard: {
-        cvc: 131,
-        expiry: '10/20',
-        name: 'John Davis',
-        number: '4465400307927329'
-      }
-    };
-  }
+class CheckoutPage extends React.Component {
+  state = {
+    upsCost: 5,
+    uberCost: null,
+    method: 'ups',
+    address: '',
+    validAddress: null,
+    startLocation: { lat: null, lng: null },
+    endLocation: { lat: null, lng: null },
+    creditCard: {
+      cvc: '',
+      expiry: '',
+      name: '',
+      number: ''
+    }
+  };
+
+  getUberEstimate = () => {
+    const { startLocation, endLocation } = this.state;
+    get('https://api.uber.com/v1.2/estimates/price', {
+      params: {
+        start_latitude: startLocation.lat,
+        start_longitude: startLocation.lng,
+        end_latitude: endLocation.lat,
+        end_longitude: endLocation.lng
+      },
+      headers: { authorization: `Token ${process.env.UBER_API_KEY}` }
+    })
+      .then((res) => {
+        const uberCost = res.data.prices.find(e => e.display_name === 'UberX')
+          .high_estimate;
+        this.setState({ uberCost });
+      })
+      .catch(err => console.dir(err));
+  };
+
+  handleLocationChange = (address) => {
+    this.setState(
+      { endLocation: { lat: null, lng: null }, address },
+      this.validateInput
+    );
+  };
+
+  handleLocationSelect = (address) => {
+    geocodeByAddress(address)
+      .then((results) => {
+        this.setState({ address, validAddress: address });
+        return getLatLng(results[0]);
+      })
+      .then(({ lat, lng }) => {
+        this.setState(
+          {
+            endLocation: { lat, lng }
+          },
+          this.validateInput
+        );
+      })
+      .catch(error => console.error('Error', error));
+
+    geocodeByAddress(this.state.startLocation)
+      .then((results) => {
+        this.setState({ address, validAddress: address });
+        return getLatLng(results[0]);
+      })
+      .then(({ lat, lng }) => {
+        this.setState(
+          {
+            startLocation: { lat, lng }
+          },
+          this.validateInput
+        );
+      })
+      .catch(error => console.error('Error', error));
+  };
 
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState(prevState => ({
-      creditCard: {
-        ...prevState.creditCard,
-        [name]: value
-      }
-    }));
+    this.setState({ [name]: value }, this.validateInput);
   };
+
+  validateInput = () => {
+    const { startLocation, endLocation } = this.state;
+    if (
+      startLocation.lat
+      && startLocation.lng
+      && endLocation.lat
+      && endLocation.lng
+    ) {
+      this.getUberEstimate();
+    }
+  };
+
+  handleFormSubmit = () => {};
 
   handleCardNumber = (e) => {
     const number = e.target.value;
@@ -67,8 +142,26 @@ export default class CheckoutPage extends React.Component {
     }));
   };
 
+  componentDidMount = () => {
+    geocodeByAddress(this.props.ticketDetails.venue)
+      .then(results => getLatLng(results[0]))
+      .then(({ lat, lng }) => {
+        this.setState({
+          startLocation: {
+            lat,
+            lng
+          }
+        });
+      })
+      .catch(error => console.error('Error', error));
+  };
+
   render() {
-    const { creditCard } = this.state;
+    const { ticket_price } = this.props.ticketDetails;
+    const fee = (Math.round(ticket_price * 0.05 * 100) / 100).toFixed(2);
+    const {
+      address, creditCard, method, upsCost, uberCost
+    } = this.state;
     return (
       <Container>
         <Row>
@@ -133,23 +226,49 @@ export default class CheckoutPage extends React.Component {
                 <FormGroup tag="fieldset">
                   <FormGroup check>
                     <Label check>
-                      <Input type="radio" name="shipping" />
-                      Standard Shipping
-                      <span className="text-muted"> (2-5 days)</span>
+                      <Input
+                        type="radio"
+                        checked={method === 'ups'}
+                        onClick={e => this.setState({ method: 'ups' })}
+                        name="ups"
+                      />
+                      UPS
+                      <span className="text-muted">
+                        (3-5 businessdays) - $
+                        {upsCost}
+                      </span>
                     </Label>
                   </FormGroup>
                   <FormGroup check>
                     <Label check>
-                      <Input type="radio" name="shipping" />
+                      <Input
+                        type="radio"
+                        checked={method === 'uber'}
+                        disabled={uberCost !== null}
+                        onClick={e => this.setState({ method: 'uber' })}
+                        name="uber"
+                      />
                       Expeditated Shipping
-                      <span className="text-muted"> (Same-day Uber)</span>
+                      <span className="text-muted">
+                        (Same-day Uber) - $
+                        {uberCost}
+                      </span>
                     </Label>
                   </FormGroup>
                 </FormGroup>
               </Row>
+              <Row>
+                <Col md={6}>
+                  <h4 className="mb-3">Shipping Address</h4>
+                  <LocationSearchInput
+                    address={address}
+                    handleLocationChange={this.handleLocationChange}
+                    handleLocationSelect={this.handleLocationSelect}
+                  />
+                </Col>
+              </Row>
               <hr className="mb-4" />
               <h4 className="mb-3">Payment Method</h4>
-
               <CreditCardInput
                 cardNumberInputProps={{
                   value: creditCard.number,
@@ -173,15 +292,24 @@ export default class CheckoutPage extends React.Component {
             <ListGroup>
               <ListGroupItem>
                 <span>Event Subtotal</span>
-                <span className="float-right">$40</span>
+                <span className="float-right">
+$
+                  {ticket_price}
+                </span>
               </ListGroupItem>
               <ListGroupItem>
                 <span>TicketX Fee (5%)</span>
-                <span className="float-right">$2</span>
+                <span className="float-right">
+$
+                  {fee}
+                </span>
               </ListGroupItem>
               <ListGroupItem>
                 <span>Shipping</span>
-                <span className="float-right">$5</span>
+                <span className="float-right">
+                  $
+                  {method === 'ups' ? upsCost : uberCost}
+                </span>
               </ListGroupItem>
               <ListGroupItem color="success">
                 <span>Total (USD)</span>
@@ -190,7 +318,20 @@ export default class CheckoutPage extends React.Component {
             </ListGroup>
           </Col>
         </Row>
+        <Button
+          onClick={this.handleSubmitForm}
+          color="primary"
+          style={{ marginTop: '20px' }}
+        >
+              Submit
+        </Button>
       </Container>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  ticketDetails: state.router.location.state.ticketDetails
+});
+
+export default connect(mapStateToProps)(CheckoutPage);

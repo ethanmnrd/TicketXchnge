@@ -1,15 +1,17 @@
 // @flow
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import { get } from 'axios';
 import { debounce } from 'lodash';
 import {
   Container, Col, Input, InputGroup, Row
 } from 'reactstrap';
-import { TICKETS_API_ROUTE } from '../../util/routes';
+import { TICKETS_API_ROUTE, CHECKOUT_PAGE_ROUTE } from '../../util/routes';
 
-export default class TicketBrowser extends Component<Props, State> {
+class TicketBrowser extends Component<Props, State> {
   state = {
     query: '',
     tickets: [],
@@ -20,6 +22,11 @@ export default class TicketBrowser extends Component<Props, State> {
     const query = e.target.value;
     this.setState({ query });
     this.updateTable(query);
+  };
+
+  handleRowClick = ({ event, index, rowData }) => {
+    event.preventDefault();
+    this.props.push(CHECKOUT_PAGE_ROUTE, { ticketDetails: rowData });
   };
 
   updateTable = debounce((query) => {
@@ -64,6 +71,7 @@ export default class TicketBrowser extends Component<Props, State> {
             rowGetter={({ index }) => tickets[index]}
             rowHeight={50}
             rowClassName={this.getRowClassName}
+            onRowClick={this.handleRowClick}
             width={width}
           >
             <Column
@@ -110,3 +118,8 @@ export default class TicketBrowser extends Component<Props, State> {
     );
   }
 }
+
+export default connect(
+  null,
+  { push }
+)(TicketBrowser);

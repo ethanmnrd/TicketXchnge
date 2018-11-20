@@ -60,7 +60,7 @@ class TicketListCreate(generics.ListCreateAPIView):
         return self.create(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        tickets = self.get_queryset().filter(ticket_event__icontains=request.query_params['ticket_event'])
+        tickets = self.get_queryset().filter(ticket_event__icontains=request.query_params['ticket_event'], ticket_quantity__gt=0)
         json_data=[]
         for ticket in tickets:
           obj = {'tid': ticket.tid, 'ticket_event': ticket.ticket_event, 'ticket_price': ticket.ticket_price, 'city': ticket.event.event_city, 'venue': ticket.event.event_venue }
@@ -73,7 +73,7 @@ class TicketRetrieveDestroy(generics.RetrieveDestroyAPIView):
     serializer_class = TicketSerializer
     renderer_classes = (JSONRenderer,)
     def get(self, request, tid):
-        ticket = Ticket.objects.get(tid=tid)
+        ticket = Ticket.objects.get(tid=tid, )
         return Response({'tid': ticket.tid, 'ticket_event': ticket.ticket_event, 'ticket_price': ticket.ticket_price, 'owner_id': ticket.owner.uid, 'event_id': ticket.event.eid}, content_type = 'application/javascript; charset=utf8')
     
     def delete(self, request, tid):
