@@ -80,6 +80,11 @@ class TicketRetrieveDestroy(generics.RetrieveDestroyAPIView):
         ticket = Ticket.objects.get(tid=tid)
         ticket.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+  
+class TicketPurchase(generics.RetrieveDestroyAPIView):
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    renderer_classes = (JSONRenderer,)
 
 
 class EventCreate(generics.ListCreateAPIView):

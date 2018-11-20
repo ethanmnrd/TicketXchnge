@@ -52,7 +52,6 @@ class LoginPage extends Component<Props, State> {
 
   render() {
     const { error } = this.state;
-    console.dir(this.state);
     return (
       <div className="container align-middle" style={{ marginTop: '50px' }}>
         <h1 style={{ textAlign: 'center' }} className="display-1">

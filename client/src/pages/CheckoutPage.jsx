@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import CreditCardInput from 'react-credit-card-input';
+import { push } from 'connected-react-router';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import { get } from 'axios';
+import { get, delete as delet } from 'axios';
 import {
   Button,
   Container,
@@ -16,6 +17,7 @@ import {
   Row
 } from 'reactstrap';
 import LocationSearchInput from '../containers/LocationSearchInput';
+import { DELETE_TICKET_API_ROUTE, HOME_PAGE_ROUTE } from '../../util/routes';
 
 class CheckoutPage extends React.Component {
   state = {
@@ -110,7 +112,11 @@ class CheckoutPage extends React.Component {
     }
   };
 
-  handleFormSubmit = () => {};
+  handleSubmitForm = (e) => {
+    e.preventDefault();
+    delet(DELETE_TICKET_API_ROUTE + this.props.ticketDetails.tid);
+    this.props.push(HOME_PAGE_ROUTE);
+  };
 
   handleCardNumber = (e) => {
     const number = e.target.value;
@@ -157,11 +163,13 @@ class CheckoutPage extends React.Component {
   };
 
   render() {
-    const { ticket_price } = this.props.ticketDetails;
+    const ticket_price = parseFloat(this.props.ticketDetails.ticket_price);
     const fee = (Math.round(ticket_price * 0.05 * 100) / 100).toFixed(2);
     const {
       address, creditCard, method, upsCost, uberCost
     } = this.state;
+    const shippingCost = method === 'ups' ? upsCost : uberCost;
+    const totalCost = ticket_price + parseFloat(fee) + shippingCost;
     return (
       <Container>
         <Row>
@@ -313,7 +321,10 @@ $
               </ListGroupItem>
               <ListGroupItem color="success">
                 <span>Total (USD)</span>
-                <strong className="float-right">$47</strong>
+                <strong className="float-right">
+$
+                  {totalCost.toFixed(2)}
+                </strong>
               </ListGroupItem>
             </ListGroup>
           </Col>
@@ -323,7 +334,7 @@ $
           color="primary"
           style={{ marginTop: '20px' }}
         >
-              Submit
+          Submit
         </Button>
       </Container>
     );
@@ -334,4 +345,7 @@ const mapStateToProps = state => ({
   ticketDetails: state.router.location.state.ticketDetails
 });
 
-export default connect(mapStateToProps)(CheckoutPage);
+export default connect(
+  mapStateToProps,
+  { push }
+)(CheckoutPage);

@@ -63,7 +63,6 @@ class SellTicket extends Component<Props, State> {
   handleSubmitForm = (e) => {
     e.preventDefault();
     const { price, quantity, address } = this.state;
-    console.dir(this.props.jwt);
     post(
       TICKETS_API_ROUTE,
       {
