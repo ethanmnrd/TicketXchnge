@@ -163,11 +163,13 @@ class CheckoutPage extends React.Component {
   };
 
   render() {
-    const { ticket_price } = this.props.ticketDetails;
+    const ticket_price = parseFloat(this.props.ticketDetails.ticket_price);
     const fee = (Math.round(ticket_price * 0.05 * 100) / 100).toFixed(2);
     const {
       address, creditCard, method, upsCost, uberCost
     } = this.state;
+    const shippingCost = method === 'ups' ? upsCost : uberCost;
+    const totalCost = ticket_price + parseFloat(fee) + shippingCost;
     return (
       <Container>
         <Row>
@@ -319,7 +321,10 @@ $
               </ListGroupItem>
               <ListGroupItem color="success">
                 <span>Total (USD)</span>
-                <strong className="float-right">$47</strong>
+                <strong className="float-right">
+$
+                  {totalCost.toFixed(2)}
+                </strong>
               </ListGroupItem>
             </ListGroup>
           </Col>
