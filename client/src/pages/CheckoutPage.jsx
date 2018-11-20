@@ -244,7 +244,7 @@ class CheckoutPage extends React.Component {
                       <Input
                         type="radio"
                         checked={method === 'uber'}
-                        disabled={uberCost !== null}
+                        disabled={uberCost === null}
                         onClick={e => this.setState({ method: 'uber' })}
                         name="uber"
                       />
