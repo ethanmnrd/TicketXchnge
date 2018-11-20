@@ -163,7 +163,6 @@ class CheckoutPage extends React.Component {
   };
 
   render() {
-    console.dir(this.props);
     const { ticket_price } = this.props.ticketDetails;
     const fee = (Math.round(ticket_price * 0.05 * 100) / 100).toFixed(2);
     const {
@@ -330,7 +329,7 @@ $
           color="primary"
           style={{ marginTop: '20px' }}
         >
-              Submit
+          Submit
         </Button>
       </Container>
     );
@@ -341,4 +340,7 @@ const mapStateToProps = state => ({
   ticketDetails: state.router.location.state.ticketDetails
 });
 
-export default connect(mapStateToProps, { push })(CheckoutPage);
+export default connect(
+  mapStateToProps,
+  { push }
+)(CheckoutPage);

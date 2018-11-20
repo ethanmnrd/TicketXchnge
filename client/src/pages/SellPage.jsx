@@ -54,7 +54,6 @@ export default class SellPage extends Component<Props, State> {
       }
     })
       .then((res) => {
-        // console.dir(res);
         if (res.data.length > 0) {
           this.setState({ events: res.data });
         } else {
