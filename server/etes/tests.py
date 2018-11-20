@@ -19,6 +19,8 @@ class UserTestCase(TestCase):
         # Tests get_full_name() from User model
         self.assertEqual(b.get_full_name(), b.f_name + " " + b.l_name)
 
+        self.assertFalse(b.is_staff())
+
         # Tests get_first_name() from User model
         self.assertEqual(b.get_first_name(), b.f_name)
 
@@ -41,8 +43,8 @@ class TicketTestCase(TestCase):
 
 
 class EventTestCase(TestCase):
-    def create_testevent(self, event_name="testevent", event_venue="testvenue", event_date="2018-01-01"):
-        return Event.objects.create_event(event_name=event_name, event_venue=event_venue, event_date=event_date)
+    def create_testevent(self, event_name="testevent", event_venue="testvenue", event_date='2018-11-01', start_time='18:00:00'):
+        return Event.objects.create_event(event_name=event_name, event_venue=event_venue, event_date=event_date, start_time=start_time)
 
     def test_event_creation(self):
         e = self.create_testevent()

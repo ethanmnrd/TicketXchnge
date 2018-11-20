@@ -1,6 +1,11 @@
 // @flow
 import path from 'path';
+import webpack from 'webpack';
+import dotenv from 'dotenv';
 import { WDS_PORT, isProd } from './client/util/config';
+
+dotenv.config();
+
 
 export default {
   entry: [
@@ -27,6 +32,7 @@ export default {
       }
     ]
   },
+
   resolve: {
     extensions: ['.js', '.jsx', '.css']
   },
@@ -36,5 +42,12 @@ export default {
     port: WDS_PORT,
     hot: isProd ? false : true,
     headers: { 'Access-Control-Allow-Origin': '*' }
-  }
+  },
+  plugins: [
+    // add the plugin to your plugins array
+    new webpack.DefinePlugin({
+      'process.env.GOOGLE_API_KEY': JSON.stringify(process.env.GOOGLE_API_KEY),
+      'process.env.UBER_API_KEY': JSON.stringify(process.env.UBER_API_KEY)
+    })
+  ]
 };

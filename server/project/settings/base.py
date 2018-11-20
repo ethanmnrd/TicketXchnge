@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILD_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../dist'))
@@ -54,6 +55,19 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_VERIFY': False,
+}
 
 ROOT_URLCONF = 'project.urls'
 
@@ -138,7 +152,7 @@ AUTH_USER_MODEL = 'etes.User'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Los_Angeles'
 
 USE_I18N = True
 
@@ -155,3 +169,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BUILD_DIR),
 )
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")

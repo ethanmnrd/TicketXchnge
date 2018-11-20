@@ -12,7 +12,6 @@ def webpack(bundle):
     Also, I'm using the requests library but you can also use urllib of course.
     """
     use_dev_server = False
-    print(settings.WEBPACK_DEV_SERVER)
     if settings.WEBPACK_DEV_SERVER:
         try:
             request = requests.get(
@@ -22,8 +21,8 @@ def webpack(bundle):
                 use_dev_server = True
         except requests.ConnectionError:
             pass
-
     return {
         'bundle': bundle,
         'use_dev_server': use_dev_server,
+        'GOOGLE_API_KEY': settings.GOOGLE_API_KEY
     }

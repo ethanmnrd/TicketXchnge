@@ -8,14 +8,16 @@ import NavMenu from './containers/NavMenu';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import CheckoutPage from './pages/CheckoutPage';
-import SignUpPage from './pages/SignUpPage';
+import SellPage from './pages/SellPage';
+import CreateEvent from './containers/CreateEvent';
 import NotFoundPage from './pages/NotFound';
 import { APP_NAME } from '../util/config';
 import {
   HOME_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
   CHECKOUT_PAGE_ROUTE,
-  SIGN_UP_PAGE
+  SELL_PAGE_ROUTE,
+  CREATE_EVENT_PAGE
 } from '../util/routes';
 import './styles/app.global.css';
 
@@ -27,7 +29,8 @@ const App = () => (
       <Route exact path={HOME_PAGE_ROUTE} render={() => <HomePage />} />
       <Route exact path={LOGIN_PAGE_ROUTE} render={() => <LoginPage />} />
       <Route exact path={CHECKOUT_PAGE_ROUTE} render={() => <CheckoutPage />} />
-      <Route exact path={SIGN_UP_PAGE} render={() => <SignUpPage />} />
+      <Route exact path={SELL_PAGE_ROUTE} render={() => <SellPage />} />
+      <Route exact path={CREATE_EVENT_PAGE} render={() => <CreateEvent />} />
       <Route component={NotFoundPage} />
     </Switch>
   </div>
