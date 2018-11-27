@@ -3,6 +3,8 @@
 ## About
 This project was made by students for the purpose of a software engineering class. It is a Ticketmaster clone enhanced with the ability to deliver items via Uber.
 
+Link to Heroku Deployed App: https://ticketx.herokuapp.com/
+
 ## Running The Project
 
 ### 0) Installing the Required Tools
