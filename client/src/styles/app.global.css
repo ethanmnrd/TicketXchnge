@@ -15,18 +15,30 @@
   width: 100%;
   border: 1px solid #e0e0e0;
 }
-.headerRow,
-.evenRow,
-.oddRow {
+
+.headerRow {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.evenRow, .oddRow, .hoveredRow {
   border-bottom: 1px solid #e0e0e0;
   cursor: pointer;
+  transition: .1s ease-out, .1s ease-in;
 }
+
 .oddRow {
   background-color: #fafafa;
 }
+
+.hoveredRow {
+  background-color: #343a40;
+  color: #fafafa;
+}
+
 .headerColumn {
   text-transform: none;
 }
+
 .column {
   white-space: nowrap;
   overflow: hidden;
@@ -50,4 +62,3 @@
   font-size: 1em;
   color: #bdbdbd;
 }
-

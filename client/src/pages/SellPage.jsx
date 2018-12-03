@@ -32,10 +32,13 @@ export default class SellPage extends Component<Props, State> {
     if (index < 0) {
       return 'headerRow';
     }
+    if (index === this.state.hoveredRowIndex) {
+      return 'hoveredRow';
+    }
     return index % 2 === 0 ? 'evenRow' : 'oddRow';
   };
 
-  handleRowClick = ({ event, index, rowData }) => {
+  handleRowClick = ({ event, rowData }) => {
     event.preventDefault();
     this.setState({ modalOpen: true, selectedEvent: rowData });
   };
@@ -108,6 +111,8 @@ export default class SellPage extends Component<Props, State> {
                     <div className="noRows">{noRowsMessage}</div>
                   )}
                   onRowClick={this.handleRowClick}
+                  onRowMouseOver={({ index }) => this.setState({ hoveredRowIndex: index })}
+                  onRowMouseOut={() => this.setState({ hoveredRowIndex: null })}
                   rowCount={events.length}
                   rowGetter={({ index }) => events[index]}
                   rowHeight={50}

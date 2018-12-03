@@ -13,6 +13,7 @@ import { TICKETS_API_ROUTE, CHECKOUT_PAGE_ROUTE } from '../../util/routes';
 
 class TicketBrowser extends Component<Props, State> {
   state = {
+    hoveredRowIndex: null,
     query: '',
     tickets: [],
     noRowsMessage: ''
@@ -24,7 +25,7 @@ class TicketBrowser extends Component<Props, State> {
     this.updateTable(query);
   };
 
-  handleRowClick = ({ event, index, rowData }) => {
+  handleRowClick = ({ event, rowData }) => {
     event.preventDefault();
     this.props.push(CHECKOUT_PAGE_ROUTE, { ticketDetails: rowData });
   };
@@ -53,6 +54,9 @@ class TicketBrowser extends Component<Props, State> {
     if (index < 0) {
       return 'headerRow';
     }
+    if (index === this.state.hoveredRowIndex) {
+      return 'hoveredRow';
+    }
     return index % 2 === 0 ? 'evenRow' : 'oddRow';
   };
 
@@ -72,9 +76,12 @@ class TicketBrowser extends Component<Props, State> {
             rowHeight={50}
             rowClassName={this.getRowClassName}
             onRowClick={this.handleRowClick}
+            onRowMouseOver={({ index }) => this.setState({ hoveredRowIndex: index })}
+            onRowMouseOut={() => this.setState({ hoveredRowIndex: null })}
             width={width}
           >
             <Column
+              cellDataGetter={({ rowData }) => `$${rowData.ticket_price.toFixed(2)}`}
               width={100}
               label="Price"
               dataKey="ticket_price"
