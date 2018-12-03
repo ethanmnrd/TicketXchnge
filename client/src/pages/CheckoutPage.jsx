@@ -242,8 +242,7 @@ class CheckoutPage extends React.Component {
                       />
                       UPS
                       <span className="text-muted">
-                        (3-5 businessdays) - $
-                        {upsCost}
+                        (3-5 businessdays) - ${upsCost}
                       </span>
                     </Label>
                   </FormGroup>
@@ -258,8 +257,7 @@ class CheckoutPage extends React.Component {
                       />
                       Expeditated Shipping
                       <span className="text-muted">
-                        (Same-day Uber) - $
-                        {uberCost}
+                        (Same-day Uber) - ${uberCost}
                       </span>
                     </Label>
                   </FormGroup>
@@ -300,31 +298,21 @@ class CheckoutPage extends React.Component {
             <ListGroup>
               <ListGroupItem>
                 <span>Event Subtotal</span>
-                <span className="float-right">
-$
-                  {ticket_price}
-                </span>
+                <span className="float-right">${ticket_price}</span>
               </ListGroupItem>
               <ListGroupItem>
                 <span>TicketX Fee (5%)</span>
-                <span className="float-right">
-$
-                  {fee}
-                </span>
+                <span className="float-right">${fee}</span>
               </ListGroupItem>
               <ListGroupItem>
                 <span>Shipping</span>
                 <span className="float-right">
-                  $
-                  {method === 'ups' ? upsCost : uberCost}
+                  ${method === 'ups' ? upsCost : uberCost}
                 </span>
               </ListGroupItem>
               <ListGroupItem color="success">
                 <span>Total (USD)</span>
-                <strong className="float-right">
-$
-                  {totalCost.toFixed(2)}
-                </strong>
+                <strong className="float-right">${totalCost.toFixed(2)}</strong>
               </ListGroupItem>
             </ListGroup>
           </Col>

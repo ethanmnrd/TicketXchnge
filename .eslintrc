@@ -35,7 +35,8 @@
     "react/jsx-wrap-multilines": ["error", {"declaration": false, "assignment": false}],
     "no-unneeded-ternary": 0,
     "react/destructuring-assignment": 0,
-    "prefer-destructuring":0
+    "prefer-destructuring":0,
+    "react/jsx-one-expression-per-line": 0
 	},
 	"settings": {
 		"polyfills": ["fetch"]

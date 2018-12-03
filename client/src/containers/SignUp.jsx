@@ -98,9 +98,7 @@ class SignUp extends Component<Props, State> {
     if (confirmation.includes('ERROR')) {
       return (
         <Alert color="danger" style={{ marginTop: '20px' }}>
-          Something went wrong with account creation:
-          {' '}
-          {confirmation}
+          Something went wrong with account creation: {confirmation}
         </Alert>
       );
     }
