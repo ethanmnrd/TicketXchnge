@@ -41,6 +41,8 @@ class Ticket(models.Model):
     ticket_price = models.DecimalField(null=False, max_digits=10, decimal_places=2)
     ticket_quantity = models.IntegerField(null=False)
     ticket_address = models.CharField(max_length=200, null=False)
+    ticket_fee = models.DecimalField(null=False, max_digits=10, decimal_places=2)
+    ticket_subtotal = models.DecimalField(null=False, max_digits=10, decimal_places=2)
     owner = models.ForeignKey('User', on_delete=models.CASCADE)
     event = models.ForeignKey('Event', on_delete=models.CASCADE)
 

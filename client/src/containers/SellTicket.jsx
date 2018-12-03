@@ -61,6 +61,7 @@ class SellTicket extends Component<Props, State> {
     e.preventDefault();
     if (this.validateInput()) {
       const { price, quantity, address } = this.state;
+      const fee = (price - (parseFloat(price) * 0.95).toFixed(2)).toFixed(2);
       post(
         TICKETS_API_ROUTE,
         {
@@ -68,6 +69,8 @@ class SellTicket extends Component<Props, State> {
           ticket_price: price,
           ticket_quantity: quantity,
           ticket_address: address,
+          ticket_fee: fee,
+          ticket_subtotal: (parseFloat(price) * 0.95).toFixed(2),
           event: this.props.eventDetails.eid
         },
         { headers: { Authorization: this.props.jwt } }
