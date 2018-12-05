@@ -138,7 +138,7 @@ class CheckoutPage extends React.Component {
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState({ [name]: value }, this.validateInput);
+    this.setState({ [name]: value });
   };
 
   handleCardInput = (name, value) => {
@@ -161,7 +161,6 @@ class CheckoutPage extends React.Component {
         quantity: this.props.ticketDetails.ticket_quantity - 1
       })
         .then((res) => {
-          console.dir(res);
           this.setState({ confirmationMessage: 'SUCCESS' });
         })
         .catch((err) => {
