@@ -4,13 +4,17 @@ import React, { Component } from 'react';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { post } from 'axios';
 import {
+  addDays, addYears, isAfter, isBefore
+} from 'date-fns';
+import {
+  Alert,
   Button,
   Container,
   Col,
   Form,
+  FormFeedback,
   FormGroup,
   Input,
-  Jumbotron,
   Label,
   Row
 } from 'reactstrap';
@@ -20,24 +24,29 @@ import { EVENTS_API_ROUTE } from '../../util/routes';
 
 export default class CreateEvent extends Component<Props, State> {
   state = {
-    formValid: 'false',
     lat: null,
     lng: null,
     city: null,
     eventName: '',
     eventDate: '',
     eventTime: '',
-    venue: ''
+    submitted: false,
+    venue: '',
+    confirmationMessage: null,
+    nameValid: true,
+    addressValid: true,
+    dateValid: true,
+    timeValid: true
   };
 
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState({ [name]: value }, this.validateInput);
+    this.setState({ [name]: value });
   };
 
   handleLocationChange = (address) => {
-    this.setState({ lat: null, lng: null, venue: address }, this.validateInput);
+    this.setState({ lat: null, lng: null, venue: address });
   };
 
   handleLocationSelect = (address) => {
@@ -55,8 +64,7 @@ export default class CreateEvent extends Component<Props, State> {
           {
             lat,
             lng
-          },
-          this.validateInput
+          }
         );
       })
       .catch(error => console.error('Error', error));
@@ -64,121 +72,175 @@ export default class CreateEvent extends Component<Props, State> {
 
   handleSubmitForm = (e) => {
     e.preventDefault();
-    const {
-      eventName, venue, city, eventDate, eventTime
-    } = this.state;
-    post(EVENTS_API_ROUTE, {
-      event_name: eventName,
-      event_venue: venue,
-      event_city: city,
-      event_date: eventDate,
-      start_time: eventTime
-    })
-      .then((res) => {})
-      .catch((err) => {
-        console.dir(err);
-      });
+    if (!this.state.submitted && this.validateInput()) {
+      this.setState({ submitted: true });
+      const {
+        eventName, venue, city, eventDate, eventTime
+      } = this.state;
+      post(EVENTS_API_ROUTE, {
+        event_name: eventName,
+        event_venue: venue,
+        event_city: city,
+        event_date: eventDate,
+        start_time: eventTime
+      })
+        .then(res => this.setState({ confirmationMessage: 'SUCCESS' }))
+        .catch((err) => {
+          this.setState({
+            submitted: false,
+            confirmationMessage: `ERROR: ${err}`
+          });
+        });
+    }
   };
 
   validateInput = () => {
     const {
       lat, lng, city, eventName, eventDate, eventTime
     } = this.state;
+    const addressValid = lat !== null && lng !== null && city !== null;
+    const nameValid = eventName.length > 0;
+    const today = new Date(Date.now());
+    const date = addDays(new Date(eventDate), 1);
+
+    const dateValid = eventDate !== ''
+      && isAfter(date, today)
+      && isBefore(date, addYears(today, 1));
+    const timeValid = eventTime !== '';
     this.setState({
-      formValid:
-        lat !== null
-        && lng !== null
-        && city !== null
-        && eventName.length !== 0
-        && eventDate !== null
-        && eventTime !== null
+      nameValid,
+      addressValid,
+      dateValid,
+      timeValid
     });
+    return addressValid && nameValid && dateValid && timeValid;
+  };
+
+  renderAlert = () => {
+    if (this.state.confirmationMessage) {
+      const { confirmationMessage } = this.state;
+      if (confirmationMessage === 'SUCCESS') {
+        return (
+          <Alert color="success" style={{ marginTop: '20px' }}>
+          Event creation successful!
+          </Alert>
+        );
+      }
+      if (confirmationMessage.includes('ERROR')) {
+        return (
+          <Alert color="danger" style={{ marginTop: '20px' }}>
+          Something went wrong with event creation: {confirmationMessage}
+          </Alert>
+        );
+      }
+    }
+    return null;
   };
 
   render() {
     const {
-      formValid,
       lat,
       lng,
       eventName,
       eventDate,
       eventTime,
-      venue
+      submitted,
+      venue,
+      confirmationMessage
     } = this.state;
+    console.dir(this.state);
     return (
       <Container>
         <h4 className="display-4 text-center">Fill us in on your details</h4>
-        <Jumbotron style={{ paddingTop: '25px', marginTop: '25px' }}>
-          <Row>
-            <Col md={6}>
-              <Form>
-                <Col md={12}>
-                  <FormGroup>
-                    <Label for="eventName">
-                      <b>Event Name</b>
-                    </Label>
-                    <Input
-                      value={eventName}
-                      type="text"
-                      name="eventName"
-                      onChange={this.handleUserInput}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col md={12}>
-                  <FormGroup>
-                    <Label for="eventDate">
-                      <b>Start Date</b>
-                    </Label>
-                    <Input
-                      value={eventDate}
-                      type="date"
-                      name="eventDate"
-                      onChange={this.handleUserInput}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col md={12}>
-                  <FormGroup>
-                    <Label>
-                      <b>Start Time</b>
-                    </Label>
-                    <Input
-                      value={eventTime}
-                      type="time"
-                      name="eventTime"
-                      onChange={this.handleUserInput}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col md={12}>
-                  <FormGroup>
-                    <Label>
-                      <b>Venue Address</b>
-                    </Label>
-                    <LocationSearchInput
-                      address={venue}
-                      handleLocationChange={this.handleLocationChange}
-                      handleLocationSelect={this.handleLocationSelect}
-                    />
-                  </FormGroup>
-                </Col>
-              </Form>
-            </Col>
-            <Col md={6}>
-              <Map lat={lat} lng={lng} venue={venue} />
-            </Col>
-          </Row>
-          <Button
-            onClick={this.handleSubmitForm}
-            className="float-right"
-            style={{ marginTop: '12px' }}
-            disabled={!formValid}
-            color="primary"
-          >
-            Continue
-          </Button>
-        </Jumbotron>
+        <Row style={{ marginTop: '25px' }}>
+          <Col md={6}>
+            <Form>
+              <Col md={12}>
+                <FormGroup>
+                  <Label for="eventName">
+                    <b>Event Name</b>
+                  </Label>
+                  <Input
+                    value={eventName}
+                    type="text"
+                    name="eventName"
+                    onChange={this.handleUserInput}
+                    invalid={!this.state.nameValid}
+                    disabled={submitted}
+                  />
+                  <FormFeedback>Name cannot be empty!</FormFeedback>
+                </FormGroup>
+              </Col>
+              <Col md={12}>
+                <FormGroup>
+                  <Label for="eventDate">
+                    <b>Event Date</b>
+                  </Label>
+                  <Input
+                    value={eventDate}
+                    type="date"
+                    name="eventDate"
+                    onChange={this.handleUserInput}
+                    invalid={!this.state.dateValid}
+                    disabled={submitted}
+                  />
+                  <FormFeedback>
+                    Date must be between within 1 year from tomorrow!{' '}
+                  </FormFeedback>
+                </FormGroup>
+              </Col>
+              <Col md={12}>
+                <FormGroup>
+                  <Label>
+                    <b>Start Time</b>
+                  </Label>
+                  <Input
+                    value={eventTime}
+                    type="time"
+                    name="eventTime"
+                    onChange={this.handleUserInput}
+                    invalid={!this.state.timeValid}
+                    disabled={submitted}
+                  />
+                  <FormFeedback>Must use a valid start time!</FormFeedback>
+                </FormGroup>
+              </Col>
+              <Col md={12}>
+                <FormGroup>
+                  <Label>
+                    <b>Venue Address</b>
+                  </Label>
+                  <LocationSearchInput
+                    address={venue}
+                    handleLocationChange={this.handleLocationChange}
+                    handleLocationSelect={this.handleLocationSelect}
+                    disabled={submitted}
+                  />
+                  <div
+                    className="invalid-feedback"
+                    style={{
+                      display: !this.state.addressValid ? 'block' : 'none'
+                    }}
+                  >
+                    Please choose an address from the menu!
+                  </div>
+                </FormGroup>
+                <Button
+                  onClick={this.handleSubmitForm}
+                  style={{ marginTop: '12px' }}
+                  disabled={submitted}
+                  color="primary"
+                >
+                  {submitted && !confirmationMessage ? 'Loading...' : 'Submit'}
+                </Button>
+                {this.renderAlert()}
+              </Col>
+            </Form>
+          </Col>
+          <Col md={6}>
+            <Map lat={lat} lng={lng} venue={venue} />
+          </Col>
+        </Row>
       </Container>
     );
   }

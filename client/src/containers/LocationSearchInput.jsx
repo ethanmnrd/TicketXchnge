@@ -24,7 +24,8 @@ export default function LocationSearchInput(props) {
           <input
             {...getInputProps({
               placeholder: 'Search Addresses ...',
-              className: 'form-control'
+              className: 'form-control',
+              disabled: props.disabled
             })}
           />
           <div
