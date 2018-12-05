@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
@@ -69,12 +68,15 @@ class TicketListCreate(generics.ListCreateAPIView):
         return Response(json_data, content_type = 'application/javascript; charset=utf8')
       
 
-class TicketRetrieveDestroy(generics.RetrieveDestroyAPIView):
+class TicketRetrieveDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     renderer_classes = (JSONRenderer,)
+
     def get(self, request, tid):
-        ticket = Ticket.objects.get(tid=tid, )
+        pprint('in get')
+        ticket = Ticket.objects.get(tid=tid)
+        
         return Response({'tid': ticket.tid, 'ticket_event': ticket.ticket_event, 'ticket_price': ticket.ticket_price, 'owner_id': ticket.owner.uid, 'event_id': ticket.event.eid}, content_type = 'application/javascript; charset=utf8')
     
     def delete(self, request, tid):
@@ -82,10 +84,15 @@ class TicketRetrieveDestroy(generics.RetrieveDestroyAPIView):
         ticket.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
   
-class TicketPurchase(generics.RetrieveDestroyAPIView):
+class TicketPurchase(generics.UpdateAPIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
-    renderer_classes = (JSONRenderer,)
+
+    def patch(self, request, *args, **kwargs):
+        ticket = Ticket.objects.get(tid=request.data['tid'])
+        ticket.ticket_quantity = ticket.ticket_quantity - 1
+        ticket.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class EventCreate(generics.ListCreateAPIView):

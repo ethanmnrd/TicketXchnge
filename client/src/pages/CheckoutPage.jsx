@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import CreditCardInput from 'react-credit-card-input';
 import { push } from 'connected-react-router';
-import { get, delete as delet } from 'axios';
+import { get, patch } from 'axios';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import valid from 'card-validator';
 import {
@@ -20,7 +20,7 @@ import {
   Row
 } from 'reactstrap';
 import LocationSearchInput from '../containers/LocationSearchInput';
-import { DELETE_TICKET_API_ROUTE } from '../../util/routes';
+import { PURCHASE_TICKET_API_ROUTE } from '../../util/routes';
 import { US_STATES } from '../../util/config';
 
 class CheckoutPage extends React.Component {
@@ -155,12 +155,17 @@ class CheckoutPage extends React.Component {
     e.preventDefault();
     if (!this.state.submitted && this.validateInput()) {
       this.setState({ submitted: true });
-      delet(DELETE_TICKET_API_ROUTE + this.props.ticketDetails.tid)
-        .then(() => {
+
+      patch(PURCHASE_TICKET_API_ROUTE, {
+        tid: this.props.ticketDetails.tid,
+        quantity: this.props.ticketDetails.ticket_quantity - 1
+      })
+        .then((res) => {
+          console.dir(res);
           this.setState({ confirmationMessage: 'SUCCESS' });
         })
         .catch((err) => {
-          console.err(err);
+          console.dir(err);
           this.setState({
             submitted: false,
             confirmationMessage: `ERROR: ${err}`
@@ -174,14 +179,22 @@ class CheckoutPage extends React.Component {
       const { confirmationMessage } = this.state;
       if (confirmationMessage === 'SUCCESS') {
         return (
-          <Alert color="success" disabled style={{ display: 'inline-block' }}>
-            Ticket purchase successfull!
+          <Alert
+            color="success"
+            className="ml-5"
+            style={{ display: 'inline-block' }}
+          >
+            Ticket purchase successfull
           </Alert>
         );
       }
       if (confirmationMessage.includes('ERROR')) {
         return (
-          <Alert color="danger" disabled style={{ display: 'inline-block' }}>
+          <Alert
+            color="danger"
+            className="ml-5"
+            style={{ display: 'inline-block' }}
+          >
             Something went wrong with event creation: {confirmationMessage}
           </Alert>
         );
@@ -447,7 +460,8 @@ class CheckoutPage extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  ticketDetails: state.router.location.state.ticketDetails
+  ticketDetails: state.router.location.state.ticketDetails,
+  jwt: state.jwt
 });
 
 export default connect(

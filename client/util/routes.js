@@ -10,4 +10,5 @@ export const USERS_API_ROUTE = '/api/users/';
 export const LOGIN_AUTH_API_ROUTE = '/api/login/';
 export const TICKETS_API_ROUTE = '/api/tickets/';
 export const DELETE_TICKET_API_ROUTE = '/api/ticket/';
+export const PURCHASE_TICKET_API_ROUTE = '/api/purchase/';
 export const EVENTS_API_ROUTE = '/api/events/';
