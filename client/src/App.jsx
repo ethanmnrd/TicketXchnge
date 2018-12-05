@@ -1,7 +1,8 @@
 // @flow
 
-import React from 'react';
-import { Switch } from 'react-router';
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import { Switch, withRouter } from 'react-router';
 import { Route } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import NavMenu from './containers/NavMenu';
@@ -21,19 +22,28 @@ import {
 } from '../util/routes';
 import './styles/app.global.css';
 
-const App = () => (
+const App = props => (
   <div>
     <Helmet titleTemplate={`%s | ${APP_NAME}`} defaultTitle={APP_NAME} />
     <NavMenu />
     <Switch>
-      <Route exact path={HOME_PAGE_ROUTE} render={() => <HomePage />} />
-      <Route exact path={LOGIN_PAGE_ROUTE} render={() => <LoginPage />} />
-      <Route exact path={CHECKOUT_PAGE_ROUTE} render={() => <CheckoutPage />} />
-      <Route exact path={SELL_PAGE_ROUTE} render={() => <SellPage />} />
-      <Route exact path={CREATE_EVENT_PAGE} render={() => <CreateEvent />} />
+      <Route exact path={HOME_PAGE_ROUTE} component={HomePage} />
+      {props.jwt === null ? (
+        <Route exact path={LOGIN_PAGE_ROUTE} component={LoginPage} />
+      ) : (
+        <Fragment>
+          <Route exact path={CHECKOUT_PAGE_ROUTE} component={CheckoutPage} />
+          <Route exact path={SELL_PAGE_ROUTE} component={SellPage} />
+          <Route exact path={CREATE_EVENT_PAGE} component={CreateEvent} />
+        </Fragment>
+      )}
       <Route component={NotFoundPage} />
     </Switch>
   </div>
 );
 
-export default App;
+const mapStateToProps = state => ({
+  jwt: state.jwt
+});
+
+export default withRouter(connect(mapStateToProps)(App));

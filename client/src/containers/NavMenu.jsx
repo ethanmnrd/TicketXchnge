@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { push } from 'connected-react-router';
 import {
   Collapse,
@@ -105,7 +106,9 @@ const mapStateToProps = state => ({
   router: state.router
 });
 
-export default connect(
-  mapStateToProps,
-  { restoreJWT, deleteJWT, push }
-)(NavMenu);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { restoreJWT, deleteJWT, push }
+  )(NavMenu)
+);
