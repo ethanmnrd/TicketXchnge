@@ -2,13 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import CreditCardInput from 'react-credit-card-input';
 import { push } from 'connected-react-router';
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { get, delete as delet } from 'axios';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import valid from 'card-validator';
 import {
+  Alert,
   Button,
   Container,
   Col,
   Form,
+  FormFeedback,
   FormGroup,
   Input,
   Label,
@@ -17,26 +20,38 @@ import {
   Row
 } from 'reactstrap';
 import LocationSearchInput from '../containers/LocationSearchInput';
-import { DELETE_TICKET_API_ROUTE, HOME_PAGE_ROUTE } from '../../util/routes';
+import { DELETE_TICKET_API_ROUTE } from '../../util/routes';
+import { US_STATES } from '../../util/config';
 
 class CheckoutPage extends React.Component {
   state = {
+    submitted: false,
+    confirmationMessage: null,
     upsCost: 5,
     uberCost: null,
     method: 'ups',
     address: '',
-    validAddress: null,
+    googleAddress: null,
     startLocation: { lat: null, lng: null },
     endLocation: { lat: null, lng: null },
+    locationValid: true,
     creditCard: {
       cvc: '',
       expiry: '',
-      name: '',
       number: ''
-    }
+    },
+    creditCardValid: true,
+    billingAddress: '',
+    billingAddressValid: true,
+    city: '',
+    cityValid: true,
+    state: '',
+    stateValid: true,
+    zipcode: '',
+    zipcodeValid: true
   };
 
-  getUberEstimate = () => {
+  setUberEstimate = () => {
     const { startLocation, endLocation } = this.state;
     get('https://api.uber.com/v1.2/estimates/price', {
       params: {
@@ -55,17 +70,48 @@ class CheckoutPage extends React.Component {
       .catch(err => console.dir(err));
   };
 
-  handleLocationChange = (address) => {
-    this.setState(
-      { endLocation: { lat: null, lng: null }, address },
-      this.validateInput
+  validateInput = () => {
+    const {
+      address,
+      googleAddress,
+      billingAddress,
+      creditCard,
+      city,
+      state,
+      zipcode
+    } = this.state;
+    const locationValid = address === googleAddress;
+    const billingAddressValid = billingAddress.length > 0;
+    const creditCardValid = valid.number(creditCard.number) && creditCard.cvc.length === 3;
+    const cityValid = city.length > 0;
+    const stateValid = state.length === 2;
+    const zipcodeValid = zipcode.length === 5;
+    this.setState({
+      locationValid,
+      billingAddressValid,
+      creditCardValid,
+      cityValid,
+      stateValid,
+      zipcodeValid
+    });
+    return (
+      locationValid
+      && billingAddressValid
+      && creditCardValid
+      && cityValid
+      && stateValid
+      && zipcodeValid
     );
+  };
+
+  handleLocationChange = (address) => {
+    this.setState({ endLocation: { lat: null, lng: null }, address });
   };
 
   handleLocationSelect = (address) => {
     geocodeByAddress(address)
       .then((results) => {
-        this.setState({ address, validAddress: address });
+        this.setState({ address, googleAddress: address });
         return getLatLng(results[0]);
       })
       .then(({ lat, lng }) => {
@@ -73,23 +119,20 @@ class CheckoutPage extends React.Component {
           {
             endLocation: { lat, lng }
           },
-          this.validateInput
+          this.setUberEstimate
         );
       })
       .catch(error => console.error('Error', error));
 
     geocodeByAddress(this.state.startLocation)
       .then((results) => {
-        this.setState({ address, validAddress: address });
+        this.setState({ address, googleAddress: address });
         return getLatLng(results[0]);
       })
       .then(({ lat, lng }) => {
-        this.setState(
-          {
-            startLocation: { lat, lng }
-          },
-          this.validateInput
-        );
+        this.setState({
+          startLocation: { lat, lng }
+        });
       })
       .catch(error => console.error('Error', error));
   };
@@ -100,52 +143,53 @@ class CheckoutPage extends React.Component {
     this.setState({ [name]: value }, this.validateInput);
   };
 
-  validateInput = () => {
-    const { startLocation, endLocation } = this.state;
-    if (
-      startLocation.lat
-      && startLocation.lng
-      && endLocation.lat
-      && endLocation.lng
-    ) {
-      this.getUberEstimate();
-    }
+  handleCardInput = (name, value) => {
+    this.setState(prevState => ({
+      creditCardValid: true,
+      creditCard: {
+        ...prevState.creditCard,
+        [name]: value
+      }
+    }));
   };
 
   handleSubmitForm = (e) => {
     e.preventDefault();
-    delet(DELETE_TICKET_API_ROUTE + this.props.ticketDetails.tid);
-    this.props.push(HOME_PAGE_ROUTE);
+    if (!this.state.submitted && this.validateInput()) {
+      this.setState({ submitted: true });
+      delet(DELETE_TICKET_API_ROUTE + this.props.ticketDetails.tid)
+        .then(() => {
+          this.setState({ confirmationMessage: 'SUCCESS' });
+        })
+        .catch((err) => {
+          console.err(err);
+          this.setState({
+            submitted: false,
+            confirmationMessage: `ERROR: ${err}`
+          });
+        });
+    }
   };
 
-  handleCardNumber = (e) => {
-    const number = e.target.value;
-    this.setState(prevState => ({
-      creditCard: {
-        ...prevState.creditCard,
-        number
+  renderAlert = () => {
+    if (this.state.confirmationMessage) {
+      const { confirmationMessage } = this.state;
+      if (confirmationMessage === 'SUCCESS') {
+        return (
+          <Alert color="success" disabled style={{ display: 'inline-block' }}>
+            Ticket purchase successfull!
+          </Alert>
+        );
       }
-    }));
-  };
-
-  handleCardExpiry = (e) => {
-    const expiry = e.target.value;
-    this.setState(prevState => ({
-      creditCard: {
-        ...prevState.creditCard,
-        expiry
+      if (confirmationMessage.includes('ERROR')) {
+        return (
+          <Alert color="danger" disabled style={{ display: 'inline-block' }}>
+            Something went wrong with event creation: {confirmationMessage}
+          </Alert>
+        );
       }
-    }));
-  };
-
-  handleCardCvc = (e) => {
-    const cvc = e.target.value;
-    this.setState(prevState => ({
-      creditCard: {
-        ...prevState.creditCard,
-        cvc
-      }
-    }));
+    }
+    return null;
   };
 
   componentDidMount = () => {
@@ -163,73 +207,122 @@ class CheckoutPage extends React.Component {
   };
 
   render() {
-    const ticket_price = parseFloat(this.props.ticketDetails.ticket_price);
-    const fee = (Math.round(ticket_price * 0.05 * 100) / 100).toFixed(2);
     const {
-      address, creditCard, method, upsCost, uberCost
+      submitted,
+      confirmationMessage,
+      address,
+      creditCard,
+      method,
+      upsCost,
+      uberCost,
+      creditCardValid,
+      locationValid,
+      billingAddress,
+      billingAddressValid,
+      city,
+      cityValid,
+      state,
+      stateValid,
+      zipcode,
+      zipcodeValid
     } = this.state;
+    const ticketPrice = parseFloat(this.props.ticketDetails.ticket_price);
+    const fee = (Math.round(ticketPrice * 0.05 * 100) / 100).toFixed(2);
     const shippingCost = method === 'ups' ? upsCost : uberCost;
-    const totalCost = ticket_price + parseFloat(fee) + shippingCost;
+    const totalCost = ticketPrice + parseFloat(fee) + shippingCost;
     return (
       <Container>
         <Row>
           <Col md={9}>
             <Form>
-              <h4 className="mb-3">Billing address</h4>
+              <h4 className="mb-4">Billing</h4>
               <Row form>
-                <Col md={6}>
+                <Col md={5}>
                   <FormGroup>
-                    <Label for="firstName">First Name</Label>
-                    <Input type="text" name="firstName" />
-                  </FormGroup>
-                </Col>
-                <Col md={6}>
-                  <FormGroup>
-                    <Label for="password">Last Name</Label>
-                    <Input type="password" name="password" />
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Row form>
-                <Col md={8}>
-                  <FormGroup>
-                    <Label for="address">Address</Label>
+                    <Label for="billingAddress">Billing Address</Label>
                     <Input
                       type="text"
-                      name="address"
-                      placeholder="1234 Main St"
+                      name="billingAddress"
+                      value={billingAddress}
+                      invalid={!billingAddressValid}
+                      onChange={this.handleUserInput}
                     />
+                    <FormFeedback>Billing Address can't be empty!</FormFeedback>
                   </FormGroup>
                 </Col>
-                <Col md={4}>
-                  <FormGroup>
-                    <Label for="phoneNumber">Phone Number</Label>
-                    <Input type="text" name="phoneNumber" />
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Row form>
-                <Col md={6}>
+                <Col md={3}>
                   <FormGroup>
                     <Label for="city">City</Label>
-                    <Input type="text" name="city" />
+                    <Input
+                      type="text"
+                      name="city"
+                      value={city}
+                      invalid={!cityValid}
+                      onChange={this.handleUserInput}
+                    />
+                    <FormFeedback>City</FormFeedback>
                   </FormGroup>
                 </Col>
                 <Col md={2}>
                   <FormGroup>
                     <Label for="state">State</Label>
-                    <Input type="text" name="state" />
+                    <Input
+                      type="select"
+                      name="state"
+                      value={state}
+                      invalid={!stateValid}
+                      onChange={this.handleUserInput}
+                    >
+                      {US_STATES.map(e => (
+                        <option key={e}>{e}</option>
+                      ))}
+                    </Input>
+                    <FormFeedback>State can't be empty!</FormFeedback>
                   </FormGroup>
                 </Col>
-                <Col md={4}>
+                <Col md={2}>
                   <FormGroup>
-                    <Label for="zip">Zip</Label>
-                    <Input type="number" name="zip" />
+                    <Label for="zipcode">Zip</Label>
+                    <Input
+                      type="number"
+                      name="zipcode"
+                      value={zipcode}
+                      invalid={!zipcodeValid}
+                      onChange={this.handleUserInput}
+                    />
+                    <FormFeedback>Please used valid zip!</FormFeedback>
                   </FormGroup>
                 </Col>
               </Row>
               <hr className="mb-4" />
-              <h4 className="mb-3">Shipping Method</h4>
+              <h4 className="mb-4">Payment Method</h4>
+              <CreditCardInput
+                dangerTextClassName="text-danger"
+                cardNumberInputProps={{
+                  value: creditCard.number,
+                  onChange: e => this.handleCardInput('number', e.target.value)
+                }}
+                cardExpiryInputProps={{
+                  value: creditCard.expiry,
+                  onChange: e => this.handleCardInput('expiry', e.target.value)
+                }}
+                cardCVCInputProps={{
+                  value: creditCard.cvc,
+                  onChange: e => this.handleCardInput('cvc', e.target.value)
+                }}
+                fieldClassName="credit-card-input__field "
+                inputClassName="credit-card-input__input"
+              />
+              <div
+                className="invalid-feedback"
+                style={{
+                  display: !creditCardValid ? 'block' : 'none'
+                }}
+              >
+                Please check your credit card input!
+              </div>
+              <hr className="mb-4" />
+              <h4 className="mb-4">Shipping Method</h4>
               <Row form>
                 <FormGroup tag="fieldset">
                   <FormGroup check>
@@ -237,12 +330,13 @@ class CheckoutPage extends React.Component {
                       <Input
                         type="radio"
                         checked={method === 'ups'}
-                        onClick={e => this.setState({ method: 'ups' })}
+                        onChange={() => this.setState({ method: 'ups' })}
                         name="ups"
                       />
                       UPS
                       <span className="text-muted">
-                        (3-5 businessdays) - ${upsCost}
+                        {' '}
+                        (3-5 business days) - ${upsCost}
                       </span>
                     </Label>
                   </FormGroup>
@@ -252,45 +346,46 @@ class CheckoutPage extends React.Component {
                         type="radio"
                         checked={method === 'uber'}
                         disabled={uberCost === null}
-                        onClick={e => this.setState({ method: 'uber' })}
+                        onChange={() => this.setState({ method: 'uber' })}
                         name="uber"
                       />
-                      Expeditated Shipping
-                      <span className="text-muted">
-                        (Same-day Uber) - ${uberCost}
+                      <span className={uberCost === null ? 'text-muted' : ''}>
+                        Expeditated Uber Shipping
                       </span>
+                      {uberCost === null ? (
+                        <span
+                          className={uberCost === null ? 'text-danger' : ''}
+                        >
+                          {' '}
+                          (Input Address to see cost and time to arrival)
+                        </span>
+                      ) : (
+                        <span className="text-muted">
+                          (Same-day Uber) - ${uberCost}
+                        </span>
+                      )}
                     </Label>
                   </FormGroup>
                 </FormGroup>
               </Row>
               <Row>
                 <Col md={6}>
-                  <h4 className="mb-3">Shipping Address</h4>
+                  <h4 className="mb-4">Shipping Address</h4>
                   <LocationSearchInput
                     address={address}
                     handleLocationChange={this.handleLocationChange}
                     handleLocationSelect={this.handleLocationSelect}
                   />
+                  <div
+                    className="invalid-feedback"
+                    style={{
+                      display: !locationValid ? 'block' : 'none'
+                    }}
+                  >
+                    Please choose an address from the menu!
+                  </div>
                 </Col>
               </Row>
-              <hr className="mb-4" />
-              <h4 className="mb-3">Payment Method</h4>
-              <CreditCardInput
-                cardNumberInputProps={{
-                  value: creditCard.number,
-                  onChange: this.handleCardNumber
-                }}
-                cardExpiryInputProps={{
-                  value: creditCard.expiry,
-                  onChange: this.handleCardExpiry
-                }}
-                cardCVCInputProps={{
-                  value: creditCard.cvc,
-                  onChange: this.handleCardCvc
-                }}
-                fieldClassName="credit-card-input__field "
-                inputClassName="credit-card-input__input"
-              />
             </Form>
           </Col>
           <Col md={3}>
@@ -298,7 +393,7 @@ class CheckoutPage extends React.Component {
             <ListGroup>
               <ListGroupItem>
                 <span>Event Subtotal</span>
-                <span className="float-right">${ticket_price}</span>
+                <span className="float-right">${ticketPrice}</span>
               </ListGroupItem>
               <ListGroupItem>
                 <span>TicketX Fee (5%)</span>
@@ -320,10 +415,12 @@ class CheckoutPage extends React.Component {
         <Button
           onClick={this.handleSubmitForm}
           color="primary"
-          style={{ marginTop: '20px' }}
+          style={{ margin: '20px 0px' }}
+          disabled={submitted}
         >
-          Submit
+          {submitted && !confirmationMessage ? 'Loading...' : 'Submit'}
         </Button>
+        {this.renderAlert()}
       </Container>
     );
   }
