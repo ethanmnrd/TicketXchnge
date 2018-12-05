@@ -6,6 +6,7 @@ import { push } from 'connected-react-router';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import { get } from 'axios';
 import { debounce } from 'lodash';
+import { format } from 'date-fns';
 import {
   Container, Col, Input, InputGroup, Row
 } from 'reactstrap';
@@ -67,6 +68,17 @@ class TicketBrowser extends Component<Props, State> {
     return index % 2 === 0 ? 'evenRow' : 'oddRow';
   };
 
+  getDate = ({ event_date, start_time }) => {
+    const date = new Date(
+      parseInt(event_date.substring(0, 4), 10),
+      parseInt(event_date.substring(5, 7), 10) - 1,
+      parseInt(event_date.substring(8, 10), 10),
+      parseInt(start_time.substring(0, 2), 10),
+      parseInt(start_time.substring(3, 5), 10)
+    );
+    return format(date, 'MMM Do, YYYY hh:mmA');
+  };
+
   renderTable = () => {
     const { tickets, noRowsMessage } = this.state;
     return (
@@ -83,21 +95,48 @@ class TicketBrowser extends Component<Props, State> {
             rowHeight={50}
             rowClassName={this.getRowClassName}
             onRowClick={this.handleRowClick}
-            onRowMouseOver={({ index }) => this.setState({ hoveredRowIndex: index })}
+            onRowMouseOver={({ index }) => this.setState({ hoveredRowIndex: index })
+            }
             onRowMouseOut={() => this.setState({ hoveredRowIndex: null })}
             width={width}
           >
             <Column
-              cellDataGetter={({ rowData }) => `$${rowData.ticket_price.toFixed(2)}`}
-              width={100}
-              label="Price"
-              dataKey="ticket_price"
+              cellDataGetter={({ rowData }) => this.getDate(rowData)}
+              width={200}
+              label="Date"
+              dataKey="ticket_event"
               className="column"
             />
             <Column
               width={400}
               label="Event"
               dataKey="ticket_event"
+              className="column"
+            />
+            <Column
+              width={120}
+              label="City"
+              dataKey="city"
+              className="column"
+            />
+            <Column
+              width={250}
+              label="Venue"
+              dataKey="venue"
+              className="column"
+            />
+            <Column
+              width={85}
+              label="Quantity"
+              dataKey="ticket_quantity"
+              className="column"
+            />
+            <Column
+              cellDataGetter={({ rowData }) => `$${rowData.ticket_price.toFixed(2)}`
+              }
+              width={80}
+              label="Price"
+              dataKey="ticket_price"
               className="column"
             />
           </Table>
@@ -125,8 +164,8 @@ class TicketBrowser extends Component<Props, State> {
             </InputGroup>
           </Col>
         </Row>
-        <Row style={{ marginTop: '35px' }}>
-          <Col sm={{ size: 8, offset: 2 }}>{this.renderTable()}</Col>
+        <Row style={{ marginTop: '40px' }}>
+          <Col sm={{ size: 10, offset: 1 }}>{this.renderTable()}</Col>
         </Row>
       </Container>
     );

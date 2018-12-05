@@ -62,7 +62,7 @@ class TicketListCreate(generics.ListCreateAPIView):
         tickets = self.get_queryset().filter(ticket_event__icontains=request.query_params['ticket_event'], ticket_quantity__gt=0)
         json_data=[]
         for ticket in tickets:
-            obj = {'tid': ticket.tid, 'ticket_event': ticket.ticket_event, 'ticket_price': ticket.ticket_price, 
+            obj = {'tid': ticket.tid, 'ticket_event': ticket.ticket_event, 'event_date': ticket.event.event_date, 'start_time': ticket.event.start_time, 'ticket_price': ticket.ticket_price, 
             'ticket_quantity': ticket.ticket_quantity, 'city': ticket.event.event_city, 'venue': ticket.event.event_venue, 'ticket_address': ticket.ticket_address}
             json_data.append(obj)
         return Response(json_data, content_type = 'application/javascript; charset=utf8')

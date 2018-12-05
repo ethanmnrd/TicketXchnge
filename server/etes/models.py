@@ -65,9 +65,6 @@ class Event(models.Model):
     event_name = models.CharField(max_length=100)
     event_venue = models.CharField(max_length=500)
     event_city = models.CharField(max_length=400)
-    # event_location = LocationField(
-    #     based_fields=['event_city'], zoom=7, default=Point(1.0, 1.0))
-    # objects = models.GeoManager()
     event_date = models.DateField()
     start_time = models.TimeField()
 
