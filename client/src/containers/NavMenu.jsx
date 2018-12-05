@@ -20,8 +20,8 @@ import { APP_NAME } from '../../util/config';
 import {
   HOME_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
-  SELL_PAGE_ROUTE,
-  PROFILE_PAGE_ROUTE
+  SELL_PAGE_ROUTE
+  // PROFILE_PAGE_ROUTE
 } from '../../util/routes';
 import { restoreJWT, deleteJWT } from '../actions/index';
 
@@ -48,10 +48,10 @@ class NavMenu extends React.Component {
         Profile
       </DropdownToggle>
       <DropdownMenu right>
-        <DropdownItem>
+        {/* <DropdownItem>
           <Link to={PROFILE_PAGE_ROUTE}>Checkout Profile</Link>
-        </DropdownItem>
-        <DropdownItem divider />
+        </DropdownItem> */
+        /* <DropdownItem divider /> */}
         <DropdownItem onClick={this.handleLogout}>Logout</DropdownItem>
       </DropdownMenu>
     </UncontrolledDropdown>
