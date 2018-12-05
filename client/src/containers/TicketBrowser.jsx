@@ -9,7 +9,11 @@ import { debounce } from 'lodash';
 import {
   Container, Col, Input, InputGroup, Row
 } from 'reactstrap';
-import { TICKETS_API_ROUTE, CHECKOUT_PAGE_ROUTE } from '../../util/routes';
+import {
+  TICKETS_API_ROUTE,
+  CHECKOUT_PAGE_ROUTE,
+  LOGIN_PAGE_ROUTE
+} from '../../util/routes';
 
 class TicketBrowser extends Component<Props, State> {
   state = {
@@ -25,9 +29,12 @@ class TicketBrowser extends Component<Props, State> {
     this.updateTable(query);
   };
 
-  handleRowClick = ({ event, rowData }) => {
-    event.preventDefault();
-    this.props.push(CHECKOUT_PAGE_ROUTE, { ticketDetails: rowData });
+  handleRowClick = ({ rowData }) => {
+    if (this.props.jwt) {
+      this.props.push(CHECKOUT_PAGE_ROUTE, { ticketDetails: rowData });
+    } else {
+      this.props.push(LOGIN_PAGE_ROUTE);
+    }
   };
 
   updateTable = debounce((query) => {
@@ -69,7 +76,7 @@ class TicketBrowser extends Component<Props, State> {
             gridClassName="Table"
             headerHeight={50}
             headerClassName=""
-            height={300}
+            height={400}
             noRowsRenderer={() => <div className="noRows">{noRowsMessage}</div>}
             rowCount={tickets.length}
             rowGetter={({ index }) => tickets[index]}
@@ -126,7 +133,11 @@ class TicketBrowser extends Component<Props, State> {
   }
 }
 
+const mapStateToProps = state => ({
+  jwt: state.jwt
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { push }
 )(TicketBrowser);
