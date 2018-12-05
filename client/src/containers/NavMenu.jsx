@@ -40,6 +40,7 @@ class NavMenu extends React.Component {
 
   handleLogout = (e) => {
     this.props.deleteJWT();
+    this.props.push(HOME_PAGE_ROUTE);
   };
 
   renderProfileDropdown = () => (
