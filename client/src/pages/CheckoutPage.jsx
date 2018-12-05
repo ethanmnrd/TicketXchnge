@@ -29,6 +29,8 @@ class CheckoutPage extends React.Component {
     confirmationMessage: null,
     upsCost: 5,
     uberCost: null,
+    uberMins: null,
+    uberWaiting: false,
     method: 'ups',
     address: '',
     googleAddress: null,
@@ -63,9 +65,14 @@ class CheckoutPage extends React.Component {
       headers: { authorization: `Token ${process.env.UBER_API_KEY}` }
     })
       .then((res) => {
-        const uberCost = res.data.prices.find(e => e.display_name === 'UberX')
-          .high_estimate;
-        this.setState({ uberCost });
+        const { high_estimate, duration } = res.data.prices.find(
+          e => e.product_id === 'a1111c8c-c720-46c3-8534-2fcdd730040d'
+        );
+        this.setState({
+          uberCost: high_estimate,
+          uberMins: Math.floor(duration / 60),
+          uberWaiting: false
+        });
       })
       .catch(err => console.dir(err));
   };
@@ -109,11 +116,9 @@ class CheckoutPage extends React.Component {
   };
 
   handleLocationSelect = (address) => {
+    this.setState({ address, googleAddress: address, uberWaiting: true });
     geocodeByAddress(address)
-      .then((results) => {
-        this.setState({ address, googleAddress: address });
-        return getLatLng(results[0]);
-      })
+      .then(results => getLatLng(results[0]))
       .then(({ lat, lng }) => {
         this.setState(
           {
@@ -121,18 +126,6 @@ class CheckoutPage extends React.Component {
           },
           this.setUberEstimate
         );
-      })
-      .catch(error => console.error('Error', error));
-
-    geocodeByAddress(this.state.startLocation)
-      .then((results) => {
-        this.setState({ address, googleAddress: address });
-        return getLatLng(results[0]);
-      })
-      .then(({ lat, lng }) => {
-        this.setState({
-          startLocation: { lat, lng }
-        });
       })
       .catch(error => console.error('Error', error));
   };
@@ -192,8 +185,25 @@ class CheckoutPage extends React.Component {
     return null;
   };
 
+  renderUberEstimates = () => {
+    const { uberCost, uberMins, uberWaiting } = this.state;
+    if (uberWaiting) {
+      return <span className="text-primary">(Loading...)</span>;
+    }
+
+    return uberCost === null ? (
+      <span className={uberCost === null ? 'text-danger' : ''}>
+        (Input Address to see cost and time to arrival)
+      </span>
+    ) : (
+      <span className="text-muted">
+        ({uberMins} minutes) - ${uberCost}
+      </span>
+    );
+  };
+
   componentDidMount = () => {
-    geocodeByAddress(this.props.ticketDetails.venue)
+    geocodeByAddress(this.props.ticketDetails.ticket_address)
       .then(results => getLatLng(results[0]))
       .then(({ lat, lng }) => {
         this.setState({
@@ -333,9 +343,8 @@ class CheckoutPage extends React.Component {
                         onChange={() => this.setState({ method: 'ups' })}
                         name="ups"
                       />
-                      UPS
+                      UPS Shipping{' '}
                       <span className="text-muted">
-                        {' '}
                         (3-5 business days) - ${upsCost}
                       </span>
                     </Label>
@@ -350,20 +359,9 @@ class CheckoutPage extends React.Component {
                         name="uber"
                       />
                       <span className={uberCost === null ? 'text-muted' : ''}>
-                        Expeditated Uber Shipping
+                        Expeditated Uber Shipping{' '}
                       </span>
-                      {uberCost === null ? (
-                        <span
-                          className={uberCost === null ? 'text-danger' : ''}
-                        >
-                          {' '}
-                          (Input Address to see cost and time to arrival)
-                        </span>
-                      ) : (
-                        <span className="text-muted">
-                          (Same-day Uber) - ${uberCost}
-                        </span>
-                      )}
+                      {this.renderUberEstimates()}
                     </Label>
                   </FormGroup>
                 </FormGroup>
