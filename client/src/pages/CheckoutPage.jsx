@@ -116,7 +116,12 @@ class CheckoutPage extends React.Component {
   };
 
   handleLocationSelect = (address) => {
-    this.setState({ address, googleAddress: address, uberWaiting: true });
+    this.setState({
+      address,
+      googleAddress: address,
+      locationValid: true,
+      uberWaiting: true
+    });
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
       .then(({ lat, lng }) => {
@@ -244,6 +249,21 @@ class CheckoutPage extends React.Component {
       <Container>
         <Row>
           <Col md={9}>
+            <Row>
+              <Col md={9}>
+                <h4 className="display-4">Your Event</h4>
+                <span className="mb-4">
+                  <u>
+                    <b>{this.props.ticketDetails.ticket_event}</b>
+                  </u>{' '}
+                  shipping from{' '}
+                  <u>
+                    <b>{this.props.ticketDetails.ticket_address}</b>
+                  </u>
+                </span>
+              </Col>
+            </Row>
+            <hr className="mb-4" />
             <Form>
               <h4 className="mb-4">Billing</h4>
               <Row form>
@@ -304,67 +324,69 @@ class CheckoutPage extends React.Component {
                   </FormGroup>
                 </Col>
               </Row>
-              <hr className="mb-4" />
-              <h4 className="mb-4">Payment Method</h4>
-              <CreditCardInput
-                dangerTextClassName="text-danger"
-                cardNumberInputProps={{
-                  value: creditCard.number,
-                  onChange: e => this.handleCardInput('number', e.target.value)
-                }}
-                cardExpiryInputProps={{
-                  value: creditCard.expiry,
-                  onChange: e => this.handleCardInput('expiry', e.target.value)
-                }}
-                cardCVCInputProps={{
-                  value: creditCard.cvc,
-                  onChange: e => this.handleCardInput('cvc', e.target.value)
-                }}
-                fieldClassName="credit-card-input__field "
-                inputClassName="credit-card-input__input"
-              />
-              <div
-                className="invalid-feedback"
-                style={{
-                  display: !creditCardValid ? 'block' : 'none'
-                }}
-              >
-                Please check your credit card input!
-              </div>
-              <hr className="mb-4" />
-              <h4 className="mb-4">Shipping Method</h4>
               <Row form>
-                <FormGroup tag="fieldset">
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        checked={method === 'ups'}
-                        onChange={() => this.setState({ method: 'ups' })}
-                        name="ups"
-                      />
-                      UPS Shipping{' '}
-                      <span className="text-muted">
-                        (3-5 business days) - ${upsCost}
-                      </span>
-                    </Label>
+                <Col md={6}>
+                  <h4 className="mb-4">Payment Method</h4>
+                  <CreditCardInput
+                    dangerTextClassName="text-danger"
+                    cardNumberInputProps={{
+                      value: creditCard.number,
+                      onChange: e => this.handleCardInput('number', e.target.value)
+                    }}
+                    cardExpiryInputProps={{
+                      value: creditCard.expiry,
+                      onChange: e => this.handleCardInput('expiry', e.target.value)
+                    }}
+                    cardCVCInputProps={{
+                      value: creditCard.cvc,
+                      onChange: e => this.handleCardInput('cvc', e.target.value)
+                    }}
+                    fieldClassName="credit-card-input__field"
+                    inputClassName="credit-card-input__input"
+                  />
+                  <div
+                    className="invalid-feedback"
+                    style={{
+                      display: !creditCardValid ? 'block' : 'none'
+                    }}
+                  >
+                    Please check your credit card input!
+                  </div>
+                </Col>
+                <Col md={6}>
+                  <h4 className="mb-4">Shipping Method</h4>
+                  <FormGroup tag="fieldset">
+                    <FormGroup check>
+                      <Label check>
+                        <Input
+                          type="radio"
+                          checked={method === 'ups'}
+                          onChange={() => this.setState({ method: 'ups' })}
+                          name="ups"
+                        />
+                        UPS Shipping{' '}
+                        <span className="text-muted">
+                          (3-5 business days) - ${upsCost}
+                        </span>
+                      </Label>
+                    </FormGroup>
+                    <FormGroup check>
+                      <Label check>
+                        <Input
+                          type="radio"
+                          checked={method === 'uber'}
+                          disabled={uberCost === null}
+                          onChange={() => this.setState({ method: 'uber' })}
+                          name="uber"
+                        />
+                        <span className={uberCost === null ? 'text-muted' : ''}>
+                          Expeditated Uber Shipping{' '}
+                        </span>
+                        {this.renderUberEstimates()}
+                      </Label>
+                    </FormGroup>
                   </FormGroup>
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        checked={method === 'uber'}
-                        disabled={uberCost === null}
-                        onChange={() => this.setState({ method: 'uber' })}
-                        name="uber"
-                      />
-                      <span className={uberCost === null ? 'text-muted' : ''}>
-                        Expeditated Uber Shipping{' '}
-                      </span>
-                      {this.renderUberEstimates()}
-                    </Label>
-                  </FormGroup>
-                </FormGroup>
+                </Col>
               </Row>
               <Row>
                 <Col md={6}>
@@ -387,7 +409,7 @@ class CheckoutPage extends React.Component {
             </Form>
           </Col>
           <Col md={3}>
-            <h4 className="mb-3">Your Event</h4>
+            <h4 className="display-4">Your Event</h4>
             <ListGroup>
               <ListGroupItem>
                 <span>Event Subtotal</span>
