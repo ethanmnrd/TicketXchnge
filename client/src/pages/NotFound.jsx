@@ -15,6 +15,9 @@ const NotFoundPage = () => (
       ]}
     />
     <div className="container align-middle" style={{ marginTop: '50px' }}>
+      <h3 style={{ textAlign: 'center' }} className="display-3">
+        TicketX
+      </h3>
       <h1 style={{ textAlign: 'center' }}> Page Not Found </h1>
     </div>
   </div>
