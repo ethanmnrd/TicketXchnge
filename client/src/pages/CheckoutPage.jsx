@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import CreditCardInput from 'react-credit-card-input';
 import { push } from 'connected-react-router';
 import { get, patch } from 'axios';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import { format, isThisISOWeek } from 'date-fns';
 import valid from 'card-validator';
 import {
   Alert,
@@ -23,7 +24,7 @@ import LocationSearchInput from '../containers/LocationSearchInput';
 import { PURCHASE_TICKET_API_ROUTE } from '../../util/routes';
 import { US_STATES } from '../../util/config';
 
-class CheckoutPage extends React.Component {
+class CheckoutPage extends Component {
   state = {
     submitted: false,
     confirmationMessage: null,
@@ -75,6 +76,17 @@ class CheckoutPage extends React.Component {
         });
       })
       .catch(err => console.dir(err));
+  };
+
+  getDate = ({ event_date, start_time }) => {
+    const date = new Date(
+      parseInt(event_date.substring(0, 4), 10),
+      parseInt(event_date.substring(5, 7), 10) - 1,
+      parseInt(event_date.substring(8, 10), 10),
+      parseInt(start_time.substring(0, 2), 10),
+      parseInt(start_time.substring(3, 5), 10)
+    );
+    return format(date, 'MMM Do, YYYY hh:mmA');
   };
 
   validateInput = () => {
@@ -219,6 +231,31 @@ class CheckoutPage extends React.Component {
     );
   };
 
+  renderEventDetails = () => (
+    <Fragment>
+      <h6>
+        {'Event Details:   '}
+        <u>
+          <b>{this.props.ticketDetails.ticket_event}</b>
+        </u>
+        {'  at  '}
+        <u>
+          <b>{this.props.ticketDetails.venue}</b>
+        </u>
+        {'  on  '}
+        <u>
+          <b>{this.getDate(this.props.ticketDetails)}</b>
+        </u>
+      </h6>
+      <h6>
+        {'Shipping from:  '}
+        <u>
+          <b>{this.props.ticketDetails.ticket_address}</b>
+        </u>
+      </h6>
+    </Fragment>
+  );
+
   componentDidMount = () => {
     geocodeByAddress(this.props.ticketDetails.ticket_address)
       .then(results => getLatLng(results[0]))
@@ -262,17 +299,9 @@ class CheckoutPage extends React.Component {
         <Row>
           <Col md={9}>
             <Row>
-              <Col md={9}>
+              <Col md={12}>
                 <h4 className="display-4">Your Event</h4>
-                <span className="mb-4">
-                  <u>
-                    <b>{this.props.ticketDetails.ticket_event}</b>
-                  </u>{' '}
-                  shipping from{' '}
-                  <u>
-                    <b>{this.props.ticketDetails.ticket_address}</b>
-                  </u>
-                </span>
+                {this.renderEventDetails()}
               </Col>
             </Row>
             <hr className="mb-4" />
