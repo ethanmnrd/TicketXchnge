@@ -1,3 +1,7 @@
 {% load static %}
-<script src="{% if use_dev_server %}http://localhost:7000/dist/js/{% else %}{% static 'js/' %}{% endif %}{{ bundle }}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&libraries=places"></script>
+<script>function initMap() { 
+  const script = document.createElement("script");
+  script.src = "{% if use_dev_server %}http://localhost:7000/dist/js/{% else %}{% static 'js/' %}{% endif %}{{ bundle }}"
+  document.body.insertAdjacentElement("afterbegin", script);
+ }</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&libraries=places&callback=initMap"></script>

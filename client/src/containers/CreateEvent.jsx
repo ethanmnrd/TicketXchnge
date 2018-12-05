@@ -60,12 +60,7 @@ export default class CreateEvent extends Component<Props, State> {
         return getLatLng(results[0]);
       })
       .then(({ lat, lng }) => {
-        this.setState(
-          {
-            lat,
-            lng
-          }
-        );
+        this.setState({ lat, lng });
       })
       .catch(error => console.error('Error', error));
   };
@@ -122,14 +117,14 @@ export default class CreateEvent extends Component<Props, State> {
       if (confirmationMessage === 'SUCCESS') {
         return (
           <Alert color="success" style={{ marginTop: '20px' }}>
-          Event creation successful!
+            Event creation successful!
           </Alert>
         );
       }
       if (confirmationMessage.includes('ERROR')) {
         return (
           <Alert color="danger" style={{ marginTop: '20px' }}>
-          Something went wrong with event creation: {confirmationMessage}
+            Something went wrong with event creation: {confirmationMessage}
           </Alert>
         );
       }

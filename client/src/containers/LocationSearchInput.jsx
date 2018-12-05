@@ -1,4 +1,5 @@
 // @flow
+/* global google */
 
 import React from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
