@@ -31,7 +31,8 @@ class SellTicket extends Component<Props, State> {
     quantityValid: true,
     confirmationMessage: null,
     lat: null,
-    lng: null
+    lng: null,
+    submitted: false
   };
 
   handleUserInput = (e) => {
@@ -59,7 +60,8 @@ class SellTicket extends Component<Props, State> {
 
   handleSubmitForm = (e) => {
     e.preventDefault();
-    if (this.validateInput()) {
+    if (!this.state.submitted && this.validateInput()) {
+      this.setState({ submitted: true });
       const { price, quantity, address } = this.state;
       const fee = (price - (parseFloat(price) * 0.95).toFixed(2)).toFixed(2);
       post(
@@ -79,8 +81,11 @@ class SellTicket extends Component<Props, State> {
           this.setState({ confirmationMessage: 'Success!' });
         })
         .catch((err) => {
-          console.dir(err);
-          this.setState({ confirmationMessage: 'Error' });
+          console.err(err);
+          this.setState({
+            submitted: false,
+            confirmationMessage: `ERROR: ${err}`
+          });
         });
     }
   };
@@ -117,7 +122,9 @@ class SellTicket extends Component<Props, State> {
       price,
       priceValid,
       lat,
-      lng
+      lng,
+      submitted,
+      confirmationMessage
     } = this.state;
     return (
       <Container className="align-middle" style={this.props.style}>
@@ -130,6 +137,7 @@ class SellTicket extends Component<Props, State> {
                   address={address}
                   handleLocationChange={this.handleLocationChange}
                   handleLocationSelect={this.handleLocationSelect}
+                  disabled={submitted}
                 />
                 <div
                   className="invalid-feedback"
@@ -149,6 +157,7 @@ class SellTicket extends Component<Props, State> {
                   type="text"
                   name="quantity"
                   invalid={!quantityValid}
+                  disabled={submitted}
                 />
                 <FormFeedback>Please use a valid quantity!</FormFeedback>
               </FormGroup>
@@ -167,6 +176,7 @@ class SellTicket extends Component<Props, State> {
                   name="price"
                   invalid={!priceValid}
                   valid={this.validPrice()}
+                  disabled={submitted}
                 />
                 <FormFeedback>Please enter a valid price!</FormFeedback>
                 {this.validPrice() ? (
@@ -188,8 +198,9 @@ class SellTicket extends Component<Props, State> {
               onClick={this.handleSubmitForm}
               color="primary"
               style={{ marginBottom: '20px' }}
+              disabled={submitted}
             >
-              Submit
+              {submitted && !confirmationMessage ? 'Loading...' : 'Submit'}
             </Button>
             {this.renderAlert()}
           </Row>
