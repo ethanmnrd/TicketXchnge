@@ -1977,6 +1977,13 @@ capture-exit@^1.2.0:
   dependencies:
     rsvp "^3.3.3"
 
+card-validator@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/card-validator/-/card-validator-6.0.0.tgz#ed35134e3545bfb9ab88204778f8007fc023ea80"
+  integrity sha512-M0f9AR//drteDaoXXv/TnvPSwYhIZp86CBLwNZ1T89mNkFMxcgKRJnSYJvQ+MSRJjIaVNRapPHdi4NVhxfB67Q==
+  dependencies:
+    credit-card-type "^8.0.0"
+
 caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
@@ -2487,6 +2494,11 @@ credit-card-type@6.3.0:
   resolved "https://registry.yarnpkg.com/credit-card-type/-/credit-card-type-6.3.0.tgz#6e6c13e7e592f83b067c24429486a4f250eaa030"
   integrity sha1-bmwT5+WS+DsGfCRClIak8lDqoDA=
 
+credit-card-type@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/credit-card-type/-/credit-card-type-8.0.0.tgz#e65347bcdb979b4deb3107cd43a1cd9da802cd50"
+  integrity sha512-q3k5fbLJJIkPTBLr03Wo2Ui8cF5vHE8eTT/3K7BUW1ROoyns2vHoglWrzjmU/8JKA0X7JFlYlUVuDRwn7l2ldw==
+
 cross-env@^5.1.4:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-5.2.0.tgz#6ecd4c015d5773e614039ee529076669b9d126f2"
@@ -2684,6 +2696,11 @@ data-urls@^1.0.0:
     abab "^2.0.0"
     whatwg-mimetype "^2.1.0"
     whatwg-url "^7.0.0"
+
+date-fns@^1.29.0:
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.29.0.tgz#12e609cdcb935127311d04d33334e2960a2a54e6"
+  integrity sha512-lbTXWZ6M20cWH8N9S6afb0SBm6tMk+uUg6z3MqHPKE9atmsY3kJkTm8vKe93izJ2B2+q5MV990sM2CHgtAZaOw==
 
 date-now@^0.1.4:
   version "0.1.4"

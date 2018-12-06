@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { post } from 'axios';
@@ -22,74 +22,88 @@ import { TICKETS_API_ROUTE } from '../../util/routes';
 
 class SellTicket extends Component<Props, State> {
   state = {
-    formValid: false,
     address: '',
-    validAddress: null,
-    price: 0,
+    googleAddress: null,
+    addressValid: true,
+    price: '',
     priceValid: true,
-    quantity: 0,
+    quantity: '',
     quantityValid: true,
     confirmationMessage: null,
     lat: null,
-    lng: null
+    lng: null,
+    submitted: false
   };
 
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState({ [name]: value }, this.validateInput);
+    this.setState({ [name]: value });
   };
 
   handleLocationChange = (address) => {
-    this.setState({ address }, this.validateInput);
+    this.setState({ address });
   };
 
   handleLocationSelect = (address) => {
-    this.setState({ address, validAddress: address });
+    this.setState({ address, googleAddress: address });
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
       .then(({ lat, lng }) => {
-        this.setState(
-          {
-            lat,
-            lng
-          },
-          this.validateInput
-        );
+        this.setState({
+          lat,
+          lng
+        });
       })
       .catch(error => console.error('Error', error));
   };
 
   handleSubmitForm = (e) => {
     e.preventDefault();
-    const { price, quantity, address } = this.state;
-    post(
-      TICKETS_API_ROUTE,
-      {
-        ticket_event: this.props.eventDetails.event_name,
-        ticket_price: price,
-        ticket_quantity: quantity,
-        ticket_address: address,
-        event: this.props.eventDetails.eid
-      },
-      { headers: { Authorization: this.props.jwt } }
-    )
-      .then((res) => {
-        this.setState({ confirmationMessage: 'Success!' });
-      })
-      .catch((err) => {
-        console.dir(err);
-        this.setState({ confirmationMessage: 'Error' });
-      });
+    if (!this.state.submitted && this.validateInput()) {
+      this.setState({ submitted: true });
+      const { price, quantity, address } = this.state;
+      const fee = (price - (parseFloat(price) * 0.95).toFixed(2)).toFixed(2);
+      post(
+        TICKETS_API_ROUTE,
+        {
+          ticket_event: this.props.eventDetails.event_name,
+          ticket_price: price,
+          ticket_quantity: quantity,
+          ticket_address: address,
+          ticket_fee: fee,
+          ticket_subtotal: (parseFloat(price) * 0.95).toFixed(2),
+          event: this.props.eventDetails.eid
+        },
+        { headers: { Authorization: this.props.jwt } }
+      )
+        .then((res) => {
+          this.setState({ confirmationMessage: 'Success!' });
+        })
+        .catch((err) => {
+          console.err(err);
+          this.setState({
+            submitted: false,
+            confirmationMessage: `ERROR: ${err}`
+          });
+        });
+    }
   };
 
   validateInput = () => {
-    const { validAddress, quantity, price } = this.state;
-    const quantityValid = quantity > 0;
-    const priceValid = price >= 0;
-    this.setState({
-      formValid: validAddress && quantityValid && priceValid
-    });
+    const {
+      address, googleAddress, quantity, price
+    } = this.state;
+    const quantityValid = new RegExp('^\\d+$').test(quantity);
+    const priceValid = new RegExp('^(?:\\d+)($|(?:\\.\\d{2})$)').test(price);
+    const addressValid = address === googleAddress;
+    this.setState({ addressValid, quantityValid, priceValid });
+    return quantityValid && priceValid && addressValid;
+  };
+
+  validPrice = () => {
+    const { price } = this.state;
+    return new RegExp('^(?:\\d+)($|(?:\\.\\d{2})$)').test(price);
   };
 
   renderAlert = () => (this.state.confirmationMessage ? (
@@ -101,14 +115,16 @@ class SellTicket extends Component<Props, State> {
   render = () => {
     const {
       address,
-      validAddress,
+      addressValid,
+      googleAddress,
       quantity,
       quantityValid,
       price,
       priceValid,
-      formValid,
       lat,
-      lng
+      lng,
+      submitted,
+      confirmationMessage
     } = this.state;
     return (
       <Container className="align-middle" style={this.props.style}>
@@ -121,7 +137,14 @@ class SellTicket extends Component<Props, State> {
                   address={address}
                   handleLocationChange={this.handleLocationChange}
                   handleLocationSelect={this.handleLocationSelect}
+                  disabled={submitted}
                 />
+                <div
+                  className="invalid-feedback"
+                  style={{ display: !addressValid ? 'block' : 'none' }}
+                >
+                  Please choose an address from the menu!
+                </div>
               </FormGroup>
             </Col>
             <Col md={3}>
@@ -131,16 +154,20 @@ class SellTicket extends Component<Props, State> {
                   value={quantity}
                   onChange={this.handleUserInput}
                   placeholder="Enter Quantity"
-                  type="number"
+                  type="text"
                   name="quantity"
                   invalid={!quantityValid}
+                  disabled={submitted}
                 />
-                <FormFeedback>Name cannot be empty!</FormFeedback>
+                <FormFeedback>Please use a valid quantity!</FormFeedback>
               </FormGroup>
             </Col>
             <Col md={3}>
               <FormGroup>
-                <Label for="price">Ticket Price</Label>
+                <Label for="price">
+                  Ticket Price
+                  <small className="text-muted"> (5% fee)</small>
+                </Label>
                 <Input
                   value={price}
                   onChange={this.handleUserInput}
@@ -148,23 +175,38 @@ class SellTicket extends Component<Props, State> {
                   type="text"
                   name="price"
                   invalid={!priceValid}
+                  valid={this.validPrice()}
+                  disabled={submitted}
                 />
                 <FormFeedback>Please enter a valid price!</FormFeedback>
+                {this.validPrice() ? (
+                  <Fragment>
+                    <FormFeedback valid>
+                      Fee - $
+                      {(price - (parseFloat(price) * 0.95).toFixed(2)).toFixed(
+                        2
+                      )}
+                    </FormFeedback>
+                    <FormFeedback valid>
+                      Subtotal - ${(parseFloat(price) * 0.95).toFixed(2)}
+                    </FormFeedback>
+                  </Fragment>
+                ) : null}
               </FormGroup>
             </Col>
             <Button
-              disabled={!formValid}
               onClick={this.handleSubmitForm}
               color="primary"
               style={{ marginBottom: '20px' }}
+              disabled={submitted}
             >
-              Submit
+              {submitted && !confirmationMessage ? 'Loading...' : 'Submit'}
             </Button>
             {this.renderAlert()}
           </Row>
         </Form>
         <Row>
-          <Map lat={lat} lng={lng} venue={validAddress} />
+          <Map lat={lat} lng={lng} venue={googleAddress} />
         </Row>
       </Container>
     );

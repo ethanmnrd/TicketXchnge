@@ -31,13 +31,16 @@ class TicketTestCase(TestCase):
     def setUp(self):
         owner = User.objects.create_user(uid=2, email='unittest@example.com', f_name='unittest_fname', l_name='unittest_lname', password='unittest_password')
         event = Event.objects.create_event(eid=2, event_name="unittest_event_name", event_venue="unittest_event_venue", event_date='2019-11-01', start_time='18:00:00')
-        Ticket.objects.create_ticket(ticket_event="unittest_event_name", ticket_type="GA", ticket_price=10.10, ticket_quantity=5, ownerId=owner, eventId=event)
+        Ticket.objects.create_ticket(ticket_event="unittest_event_name", ticket_type="GA", ticket_price=10.10, ticket_quantity=5, ticket_address='San José State University, Washington Sq, San Jose, CA, United States', 
+              ticket_fee="5.00", ticket_subtotal="95.00", ownerId=owner, eventId=event)
 
     def test_ticket_creation(self):
         unittest_ticket = Ticket.objects.get(ticket_event="unittest_event_name")
         unittest_event = Event.objects.get(eid=2)
         unittest_user = User.objects.get(email="unittest@example.com")
         self.assertEqual(unittest_ticket.ticket_quantity, 5)
+        self.assertEqual(unittest_ticket.ticket_subtotal, 95.00)
+        self.assertEqual(unittest_ticket.ticket_fee, 5.00)
         self.assertEqual(unittest_ticket.ticket_event, "unittest_event_name")
         self.assertEqual(unittest_ticket.owner, unittest_user)
         self.assertEqual(unittest_ticket.event, unittest_event)

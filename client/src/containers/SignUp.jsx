@@ -27,7 +27,6 @@ class SignUp extends Component<Props, State> {
     firstName: '',
     lastName: '',
     password: '',
-    formValid: false,
     emailValid: true,
     firstNameValid: true,
     lastNameValid: true,
@@ -38,10 +37,34 @@ class SignUp extends Component<Props, State> {
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState({ [name]: value }, this.validateForm);
+    this.setState({ [name]: value });
   };
 
-  validateForm = () => {
+  handleSubmitForm = (e) => {
+    e.preventDefault();
+    if (this.validateInput()) {
+      const {
+        firstName, lastName, email, password
+      } = this.state;
+      post(USERS_API_ROUTE, {
+        f_name: firstName,
+        l_name: lastName,
+        email,
+        user_name: email,
+        password
+      })
+        .then((res) => {
+          this.props.setJWT(res.data.token);
+          this.props.push(HOME_PAGE_ROUTE);
+          this.setState({ confirmation: 'SUCCESS' });
+        })
+        .catch((err) => {
+          this.setState({ confirmation: `ERROR: ${err}` });
+        });
+    }
+  };
+
+  validateInput = () => {
     const {
       email, password, firstName, lastName
     } = this.state;
@@ -54,36 +77,13 @@ class SignUp extends Component<Props, State> {
     const passwordValid = password.length >= 8;
     const firstNameValid = firstName.length > 0;
     const lastNameValid = lastName.length > 0;
-    const formValid = emailValid && passwordValid && firstNameValid && lastNameValid;
     this.setState({
       emailValid,
       passwordValid,
-      formValid,
       firstNameValid,
       lastNameValid
     });
-  };
-
-  handleSubmitForm = (e) => {
-    e.preventDefault();
-    const {
-      firstName, lastName, email, password
-    } = this.state;
-    post(USERS_API_ROUTE, {
-      f_name: firstName,
-      l_name: lastName,
-      email,
-      user_name: email,
-      password
-    })
-      .then((res) => {
-        this.props.setJWT(res.data.token);
-        this.props.push(HOME_PAGE_ROUTE);
-        this.setState({ confirmation: 'SUCCESS' });
-      })
-      .catch((err) => {
-        this.setState({ confirmation: `ERROR: ${err}` });
-      });
+    return emailValid && passwordValid && firstNameValid && lastNameValid;
   };
 
   renderAlert = () => {
@@ -98,9 +98,7 @@ class SignUp extends Component<Props, State> {
     if (confirmation.includes('ERROR')) {
       return (
         <Alert color="danger" style={{ marginTop: '20px' }}>
-          Something went wrong with account creation:
-          {' '}
-          {confirmation}
+          Something went wrong with account creation: {confirmation}
         </Alert>
       );
     }
@@ -171,11 +169,7 @@ class SignUp extends Component<Props, State> {
             </Col>
           </Row>
           <Link to={HOME_PAGE_ROUTE}>
-            <Button
-              disabled={!this.state.formValid}
-              onClick={this.handleSubmitForm}
-              color="primary"
-            >
+            <Button onClick={this.handleSubmitForm} color="primary">
               Create Account
             </Button>
           </Link>

@@ -41,6 +41,8 @@ class Ticket(models.Model):
     ticket_price = models.DecimalField(null=False, max_digits=10, decimal_places=2)
     ticket_quantity = models.IntegerField(null=False)
     ticket_address = models.CharField(max_length=200, null=False)
+    ticket_fee = models.DecimalField(null=False, max_digits=10, decimal_places=2)
+    ticket_subtotal = models.DecimalField(null=False, max_digits=10, decimal_places=2)
     owner = models.ForeignKey('User', on_delete=models.CASCADE)
     event = models.ForeignKey('Event', on_delete=models.CASCADE)
 
@@ -63,9 +65,6 @@ class Event(models.Model):
     event_name = models.CharField(max_length=100)
     event_venue = models.CharField(max_length=500)
     event_city = models.CharField(max_length=400)
-    # event_location = LocationField(
-    #     based_fields=['event_city'], zoom=7, default=Point(1.0, 1.0))
-    # objects = models.GeoManager()
     event_date = models.DateField()
     start_time = models.TimeField()
 

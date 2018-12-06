@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { push } from 'connected-react-router';
 import {
   Collapse,
@@ -19,8 +20,8 @@ import { APP_NAME } from '../../util/config';
 import {
   HOME_PAGE_ROUTE,
   LOGIN_PAGE_ROUTE,
-  SELL_PAGE_ROUTE,
-  PROFILE_PAGE_ROUTE
+  SELL_PAGE_ROUTE
+  // PROFILE_PAGE_ROUTE
 } from '../../util/routes';
 import { restoreJWT, deleteJWT } from '../actions/index';
 
@@ -39,6 +40,7 @@ class NavMenu extends React.Component {
 
   handleLogout = (e) => {
     this.props.deleteJWT();
+    this.props.push(HOME_PAGE_ROUTE);
   };
 
   renderProfileDropdown = () => (
@@ -47,10 +49,10 @@ class NavMenu extends React.Component {
         Profile
       </DropdownToggle>
       <DropdownMenu right>
-        <DropdownItem>
+        {/* <DropdownItem>
           <Link to={PROFILE_PAGE_ROUTE}>Checkout Profile</Link>
-        </DropdownItem>
-        <DropdownItem divider />
+        </DropdownItem> */
+        /* <DropdownItem divider /> */}
         <DropdownItem onClick={this.handleLogout}>Logout</DropdownItem>
       </DropdownMenu>
     </UncontrolledDropdown>
@@ -105,7 +107,9 @@ const mapStateToProps = state => ({
   router: state.router
 });
 
-export default connect(
-  mapStateToProps,
-  { restoreJWT, deleteJWT, push }
-)(NavMenu);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { restoreJWT, deleteJWT, push }
+  )(NavMenu)
+);
